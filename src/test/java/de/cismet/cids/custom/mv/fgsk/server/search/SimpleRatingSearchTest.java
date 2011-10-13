@@ -7,6 +7,7 @@
 ****************************************************/
 package de.cismet.cids.custom.mv.fgsk.server.search;
 
+import de.cismet.cids.custom.wrrl_db_mv.fgsk.server.search.SimpleRatingSearch;
 import Sirius.server.ServerExit;
 import Sirius.server.ServerExitError;
 import Sirius.server.middleware.impls.domainserver.DomainServerImpl;
