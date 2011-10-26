@@ -1,32 +1,28 @@
-/*
- * Copyright (C) 2011 cismet GmbH
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+/***************************************************
+*
+* cismet GmbH, Saarbruecken, Germany
+*
+*              ... and it just works.
+*
+****************************************************/
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
 import Sirius.server.search.CidsServerSearch;
+
 import java.rmi.RemoteException;
+
 import java.text.MessageFormat;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
 /**
+ * DOCUMENT ME!
  *
- * @author therter
+ * @author   therter
+ * @version  $Revision$, $Date$
  */
 public class NaturschutzgebietSearch extends CidsServerSearch {
 
@@ -38,7 +34,7 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
                 + "ST_Line_Locate_Point(route_geo, st_endPoint(ST_intersection(geo_field, sgeom.geo))) "
                 + "* length(route_geo) as endPoint, "
                 + "n.bemerkung "
-                + "from gup_naturschutz n inner join geom on (n.geom = geom.id) inner join " 
+                + "from gup_naturschutz n inner join geom on (n.geom = geom.id) inner join "
                 + "gup_naturschutzart na on (n.art = na.id), "
                 + "(select geo_field as route_geo, (line_substring(geo_field, {1} / length(geo_field), {2} / length(geo_field))) as geo "
                 + "from route inner join geom on (route.geom = geom.id) "
@@ -63,8 +59,8 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
      * @param  route_gwk  DOCUMENT ME!
      */
     public NaturschutzgebietSearch(final double from, final double to, final String route_gwk) {
-        this.from = (from <= to ? from : to);
-        this.to = (to >= from ? to : from);
+        this.from = ((from <= to) ? from : to);
+        this.to = ((to >= from) ? to : from);
         this.route_gwk = route_gwk;
     }
 

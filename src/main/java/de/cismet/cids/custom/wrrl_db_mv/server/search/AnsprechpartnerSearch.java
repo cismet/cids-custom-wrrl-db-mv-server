@@ -29,16 +29,16 @@ public class AnsprechpartnerSearch extends CidsServerSearch {
     //~ Static fields/initializers ---------------------------------------------
 
     private static final String QUERY = "select a.id, s.name, a.email, a.name, a.tel, "
-            + "   s_von.wert - {1} as startPoint, s_bis.wert - {1} as endPoint "
-            + "from gup_ansprechpartner a inner join gup_zust_seite s on (a.seite = s.id)"
-            + "  	inner join station_linie sl on (a.linie = sl.id)"
-            + "  	inner join station s_von on (sl.von = s_von.id)"
-            + " 	inner join station s_bis on (sl.bis = s_bis.id)"
-            + " 	inner join route r on (s_bis.route = r.id) "
-            + "where r.gwk = {0} and"
-            + "        ( (s_von.wert > {1} AND s_von.wert < {2}) OR"
-            + "          (s_bis.wert > {1} AND s_bis.wert < {2}) OR"
-            + "          (s_von.wert = {1} AND s_bis.wert = {2})    );";
+                + "   s_von.wert - {1} as startPoint, s_bis.wert - {1} as endPoint "
+                + "from gup_ansprechpartner a inner join gup_zust_seite s on (a.seite = s.id)"
+                + "  	inner join station_linie sl on (a.linie = sl.id)"
+                + "  	inner join station s_von on (sl.von = s_von.id)"
+                + " 	inner join station s_bis on (sl.bis = s_bis.id)"
+                + " 	inner join route r on (s_bis.route = r.id) "
+                + "where r.gwk = {0} and"
+                + "        ( (s_von.wert > {1} AND s_von.wert < {2}) OR"
+                + "          (s_bis.wert > {1} AND s_bis.wert < {2}) OR"
+                + "          (s_von.wert = {1} AND s_bis.wert = {2})    );";
 
     private static final String WRRL_DOMAIN = "WRRL_DB_MV"; // NOI18N
 

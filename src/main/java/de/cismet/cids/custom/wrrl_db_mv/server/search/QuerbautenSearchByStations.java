@@ -5,6 +5,22 @@
 *              ... and it just works.
 *
 ****************************************************/
+/*
+ *  Copyright (C) 2010 therter
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
@@ -19,30 +35,28 @@ import java.util.Collection;
 import java.util.Locale;
 
 /**
- * DOCUMENT ME!
+ * Searchs for the wk_k the given geometry is contained in. The pgsql function getWk_k(integer, geometry) must exist in
+ * the database.
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class PoiSearch extends CidsServerSearch {
+public class QuerbautenSearchByStations extends CidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
-    private static final String QUERY = "select p.id, p.name, p.bemerkung, pa.name, "
-                + "       case when p.linie is not null then s_von.wert - {1} else s.wert - {1} end as startPoint, "
-                + "       case when p.linie is not null then s_bis.wert - {1} else s.wert - {1} end as endPoint "
-                + "from gup_poi p inner join gup_poi_art pa on (p.art = pa.id) "
-                + "	left outer join station_linie sl on (p.linie = sl.id) "
-                + "	left outer join station s_von on (sl.von = s_von.id) "
-                + "	left outer join station s_bis on (sl.bis = s_bis.id) "
-                + "	left outer join route r on (s_bis.route = r.id) "
-                + "	left outer join station s on (p.station = s.id) "
-                + "	left outer join route sr on (s.route = sr.id) "
-                + "where (r.gwk = {0} and "
-                + "      ( (s_von.wert > {1} AND s_von.wert < {2}) OR "
-                + "        (s_bis.wert > {1} AND s_bis.wert < {2}) OR "
-                + "        (s_von.wert = {1} AND s_bis.wert = {2}) )) OR "
-                + "      (sr.gwk = {0} AND s.wert >= {1} AND s.wert <= {2});";
+    private static final String QUERY = "SELECT querbauwerke.id     , "
+                + "querbauwerke.bauwerk, "
+                + "querbauwerke.anlagename, "
+                + "station.wert "
+                + "FROM querbauwerke, "
+                + "station, "
+                + "route "
+                + "WHERE  stat09=station.id "
+                + "AND station.route=route.id "
+                + "AND route.gwk ={0} "
+                + "AND station.wert >={1} "
+                + "AND station.wert <={2};";
 
     private static final String WRRL_DOMAIN = "WRRL_DB_MV"; // NOI18N
 
@@ -61,9 +75,9 @@ public class PoiSearch extends CidsServerSearch {
      * @param  to         DOCUMENT ME!
      * @param  route_gwk  DOCUMENT ME!
      */
-    public PoiSearch(final double from, final double to, final String route_gwk) {
-        this.from = ((from <= to) ? from : to);
-        this.to = ((to >= from) ? to : from);
+    public QuerbautenSearchByStations(final double from, final double to, final String route_gwk) {
+        this.from = from;
+        this.to = to;
         this.route_gwk = route_gwk;
     }
 
@@ -103,8 +117,8 @@ public class PoiSearch extends CidsServerSearch {
     public static void main(final String[] args) {
         System.out.println(MessageFormat.format(
                 QUERY,
-                "966400000000",
-                String.format(Locale.US, "%f", 0f),
-                String.format(Locale.US, "%f", 73485f)));
+                "4711",
+                String.format(Locale.US, "%f", 0.67),
+                String.format(Locale.US, "%f", 859457f)));
     }
 }
