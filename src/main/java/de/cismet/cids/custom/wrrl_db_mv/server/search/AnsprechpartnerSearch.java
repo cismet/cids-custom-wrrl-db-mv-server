@@ -29,7 +29,7 @@ public class AnsprechpartnerSearch extends CidsServerSearch {
     //~ Static fields/initializers ---------------------------------------------
 
     private static final String QUERY = "select a.id, s.name, a.email, a.name, a.tel, "
-                + "   s_von.wert - {1} as startPoint, s_bis.wert - {1} as endPoint "
+                + "   s_von.wert as startPoint, s_bis.wert as endPoint "
                 + "from gup_ansprechpartner a inner join gup_zust_seite s on (a.seite = s.id)"
                 + "  	inner join station_linie sl on (a.linie = sl.id)"
                 + "  	inner join station s_von on (sl.von = s_von.id)"
