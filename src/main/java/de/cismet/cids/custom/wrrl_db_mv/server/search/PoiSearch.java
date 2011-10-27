@@ -28,7 +28,7 @@ public class PoiSearch extends CidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
-    private static final String QUERY = "select p.id, p.name, p.bemerkung, pa.name, "
+    private static final String QUERY = "select p.id, p.name, p.bemerkung, pa.id, pa.name, "
                 + "       case when p.linie is not null then s_von.wert else s.wert end as startPoint, "
                 + "       case when p.linie is not null then s_bis.wert else s.wert end as endPoint "
                 + "from gup_poi p inner join gup_poi_art pa on (p.art = pa.id) "
