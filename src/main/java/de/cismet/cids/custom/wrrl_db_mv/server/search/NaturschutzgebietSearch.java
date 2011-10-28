@@ -10,6 +10,12 @@ package de.cismet.cids.custom.wrrl_db_mv.server.search;
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
 import Sirius.server.search.CidsServerSearch;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+
+import org.apache.log4j.Logger;
+
 import java.rmi.RemoteException;
 
 import java.text.MessageFormat;
@@ -28,18 +34,47 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
-    private static final String QUERY = "select na.name, "
-                + "ST_Line_Locate_Point(route_geo, st_startPoint(ST_intersection(geo_field, sgeom.geo))) "
-                + "* length(route_geo) as startPoint, "
-                + "ST_Line_Locate_Point(route_geo, st_endPoint(ST_intersection(geo_field, sgeom.geo))) "
-                + "* length(route_geo) as endPoint, "
-                + "n.bemerkung "
-                + "from gup_naturschutz n inner join geom on (n.geom = geom.id) inner join "
-                + "gup_naturschutzart na on (n.art = na.id), "
+    private static final Logger LOG = Logger.getLogger(NaturschutzgebietSearch.class);
+
+    private static final String QUERY = "select na.name,"
+                + " case when geometrytype(ST_intersection(geo_field, sgeom.geo)) = ''MULTILINESTRING'' then "
+                + "   ST_Line_Locate_Point(route_geo, st_startPoint( ST_GeometryN(ST_intersection(geo_field, sgeom.geo), "
+                + "      generate_series(1, ST_NumGeometries(ST_intersection(geo_field, sgeom.geo)))) )) * length(route_geo)"
+                + " else"
+                + "   ST_Line_Locate_Point(route_geo, st_startPoint(ST_intersection(geo_field, sgeom.geo))) * length(route_geo)"
+                + " end as startPoint, "
+                + " case when geometrytype(ST_intersection(geo_field, sgeom.geo)) = ''MULTILINESTRING'' then "
+                + "   ST_Line_Locate_Point(route_geo, st_endPoint( ST_GeometryN(ST_intersection(geo_field, sgeom.geo), "
+                + "      generate_series(1, ST_NumGeometries(ST_intersection(geo_field, sgeom.geo)))) )) * length(route_geo)"
+                + " else"
+                + "   ST_Line_Locate_Point(route_geo, st_endPoint(ST_intersection(geo_field, sgeom.geo))) * length(route_geo)"
+                + " end as endPoint, "
+                + "n.bemerkung, "
+                + " case when geometrytype(ST_intersection(geo_field, sgeom.geo)) = ''MULTILINESTRING'' then "
+                + "   asText(ST_GeometryN(ST_intersection(geo_field, sgeom.geo), "
+                + "     generate_series(1, ST_NumGeometries(ST_intersection(geo_field, sgeom.geo)))))"
+                + "  else"
+                + "   asText(ST_intersection(geo_field, sgeom.geo)) "
+                + " end as geom "
+                + "from gup_naturschutz n inner join geom on (n.geom = geom.id) "
+                + "inner join gup_naturschutzart na on (n.art = na.id), "
                 + "(select geo_field as route_geo, (line_substring(geo_field, {1} / length(geo_field), {2} / length(geo_field))) as geo "
                 + "from route inner join geom on (route.geom = geom.id) "
                 + "where route.gwk = {0}) as sgeom "
-                + "where geo_field && sgeom.geo AND intersects(geo_field, sgeom.geo);";
+                + "where geo_field && sgeom.geo AND intersects(geo_field, sgeom.geo); ";
+
+//    private static final String QUERY = "select na.name, "
+//                + "ST_Line_Locate_Point(route_geo, st_startPoint(ST_intersection(geo_field, sgeom.geo))) "
+//                + "* length(route_geo) as startPoint, "
+//                + "ST_Line_Locate_Point(route_geo, st_endPoint(ST_intersection(geo_field, sgeom.geo))) "
+//                + "* length(route_geo) as endPoint, "
+//                + "n.bemerkung "
+//                + "from gup_naturschutz n inner join geom on (n.geom = geom.id) inner join "
+//                + "gup_naturschutzart na on (n.art = na.id), "
+//                + "(select geo_field as route_geo, (line_substring(geo_field, {1} / length(geo_field), {2} / length(geo_field))) as geo "
+//                + "from route inner join geom on (route.geom = geom.id) "
+//                + "where route.gwk = {0}) as sgeom "
+//                + "where geo_field && sgeom.geo AND intersects(geo_field, sgeom.geo);";
 
     private static final String WRRL_DOMAIN = "WRRL_DB_MV"; // NOI18N
 
@@ -81,6 +116,15 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
                     getLog().debug("query: " + query); // NOI18N
                 }
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+
+                for (final ArrayList tmp : lists) {
+                    try {
+                        final String tmpString = (String)tmp.get(4);
+                        tmp.set(4, new WKTReader(new GeometryFactory()).read(tmpString));
+                    } catch (final ParseException e) {
+                        LOG.error("Error while parsing geometry.", e);
+                    }
+                }
                 return lists;
             } catch (RemoteException ex) {
                 getLog().error(ex.getMessage(), ex);
@@ -100,8 +144,8 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
     public static void main(final String[] args) {
         System.out.println(MessageFormat.format(
                 QUERY,
-                "4711",
-                String.format(Locale.US, "%f", 0.67),
-                String.format(Locale.US, "%f", 859457f)));
+                "966400000000",
+                String.format(Locale.US, "%f", 0f),
+                String.format(Locale.US, "%f", 73485f)));
     }
 }

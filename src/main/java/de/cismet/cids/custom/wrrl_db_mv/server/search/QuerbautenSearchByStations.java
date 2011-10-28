@@ -26,6 +26,12 @@ package de.cismet.cids.custom.wrrl_db_mv.server.search;
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
 import Sirius.server.search.CidsServerSearch;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+
+import org.apache.log4j.Logger;
+
 import java.rmi.RemoteException;
 
 import java.text.MessageFormat;
@@ -45,16 +51,20 @@ public class QuerbautenSearchByStations extends CidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
+    private static final Logger LOG = Logger.getLogger(QuerbautenSearchByStations.class);
     private static final String QUERY = "SELECT querbauwerke.id     , "
                 + "querbauwerke.bauwerk, "
                 + "querbauwerke.anlagename, "
-                + "station.wert "
+                + "station.wert, "
+                + "asText(geo_field) "
                 + "FROM querbauwerke, "
                 + "station, "
-                + "route "
+                + "route,"
+                + "geom "
                 + "WHERE  stat09=station.id "
                 + "AND station.route=route.id "
                 + "AND route.gwk ={0} "
+                + "AND station.real_point = geom.id "
                 + "AND station.wert >={1} "
                 + "AND station.wert <={2};";
 
@@ -98,6 +108,15 @@ public class QuerbautenSearchByStations extends CidsServerSearch {
                     getLog().debug("query: " + query); // NOI18N
                 }
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+
+                for (final ArrayList tmp : lists) {
+                    try {
+                        final String tmpString = (String)tmp.get(4);
+                        tmp.set(4, new WKTReader(new GeometryFactory()).read(tmpString));
+                    } catch (final ParseException e) {
+                        LOG.error("Error while parsing geometry.", e);
+                    }
+                }
                 return lists;
             } catch (RemoteException ex) {
                 getLog().error(ex.getMessage(), ex);
