@@ -54,7 +54,7 @@ public class SimpleRatingSearchTest {
 
     //~ Static fields/initializers ---------------------------------------------
 
-    private static final String TEST_DB_NAME = "calc_cache_search_test_db";
+    private static final String TEST_DB_NAME = "simple_rating_search_test_db";
     private static final RemoteTestHelperService SERVICE = new RemoteTestHelperClient();
     private static final String SERVER_CONFIG =
         "src/test/resources/de/cismet/cids/custom/mv/fgsk/server/search/runtime.properties"; // NOI18N
@@ -96,10 +96,10 @@ public class SimpleRatingSearchTest {
         final ServerProperties props = new ServerProperties(SERVER_CONFIG);
         final DBConnectionPool pool = new DBConnectionPool(props);
         final Connection con = pool.getConnection();
-        final ScriptRunner runner = new ScriptRunner(con, true, false);
+        final ScriptRunner runner = new ScriptRunner(con, false, true);
         runner.runScript(new BufferedReader(
                 new InputStreamReader(
-                    SimpleRatingSearchTest.class.getResourceAsStream("CalcCacheSearchTestInit.sql"))));
+                    SimpleRatingSearchTest.class.getResourceAsStream("SimpleRatingSearchTestInit.sql"))));
         con.close();
         pool.closeConnections();
 
@@ -119,7 +119,8 @@ public class SimpleRatingSearchTest {
     public static void tearDownClass() throws Throwable {
         // server shuts down all the other instances since we'return interface simple mode
         try {
-            server.shutdown();
+            if(server != null)
+                server.shutdown();
         } catch (final ServerExit e) {
             // success
         } catch (final ServerExitError e) {
