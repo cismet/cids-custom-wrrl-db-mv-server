@@ -25,11 +25,16 @@ public class MassnahmenUmsetzungToStringConverter extends CustomToStringConverte
     public String createString() {
         final Object besch = cidsBean.getProperty("mass_beschreibung");
         final String beschreibung = ((besch == null) ? "" : String.valueOf(besch));
+        String id = cidsBean.getProperty("id").toString();
 
-        if (cidsBean.getProperty("id").toString().equals("-1") && beschreibung.equals("")) {
+        if (id.equals("-1")) {
+            id = String.valueOf(cidsBean.getMetaObject().getID());
+        }
+
+        if (id.equals("-1") && beschreibung.equals("")) {
             return "unbenannt";
         }
 
-        return cidsBean.getProperty("id").toString() + " " + beschreibung;
+        return id + " " + beschreibung;
     }
 }
