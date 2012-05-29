@@ -25,7 +25,17 @@ import java.util.Collection;
 import java.util.Locale;
 
 /**
- * DOCUMENT ME!
+ * Sucht nach den Naturschutzgebieten, die auf der uebergebenen Strecke liegen. Folgende PL/SQL Funktionen muessen der
+ * Datenbank bekannt sein:
+ *
+ * <p>CREATE OR REPLACE FUNCTION determineLine(startVal numeric, endVal numeric, routeGwk bigint) RETURNS Geometry AS
+ * $BODY$ declare g Geometry; begin select line_substring(geo_field, startVal / LENGTH(geo_field), endVal /
+ * LENGTH(geo_field)) into g from route, geom where route.geom = geom.id and gwk = routeGwk; return g; end $BODY$
+ * LANGUAGE 'plpgsql' IMMUTABLE COST 100;</p>
+ *
+ * <p>CREATE OR REPLACE FUNCTION determineRouteGeom(routeGwk bigint) RETURNS Geometry AS $BODY$ declare g Geometry;
+ * begin select geo_field into g from route, geom where route.geom = geom.id and gwk = routeGwk; return g; end $BODY$
+ * LANGUAGE 'plpgsql' IMMUTABLE COST 100;</p>
  *
  * @author   therter
  * @version  $Revision$, $Date$
@@ -58,9 +68,8 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
                 + " end as geom "
                 + "from gup_naturschutz n inner join geom on (n.geom = geom.id) "
                 + "inner join gup_naturschutzart na on (n.art = na.id), "
-                + "(select geo_field as route_geo, (line_substring(geo_field, {1} / length(geo_field), {2} / length(geo_field))) as geo "
-                + "from route inner join geom on (route.geom = geom.id) "
-                + "where route.gwk = {0}) as sgeom "
+                + "(select determineRouteGeom({0}) as route_geo, determineLine({1}, {2}, {0}) as geo "
+                + ") as sgeom "
                 + "where geo_field && sgeom.geo AND intersects(geo_field, sgeom.geo); ";
 
 //    private static final String QUERY = "select na.name, "
