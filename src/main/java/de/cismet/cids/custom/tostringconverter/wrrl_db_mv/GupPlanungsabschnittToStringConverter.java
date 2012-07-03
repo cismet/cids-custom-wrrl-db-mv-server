@@ -19,7 +19,7 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GupGewaesserabschnittToStringConverter extends CustomToStringConverter {
+public class GupPlanungsabschnittToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
