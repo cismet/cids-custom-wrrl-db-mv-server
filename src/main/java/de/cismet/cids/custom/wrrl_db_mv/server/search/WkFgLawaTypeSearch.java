@@ -5,26 +5,11 @@
 *              ... and it just works.
 *
 ****************************************************/
-/*
- *  Copyright (C) 2010 therter
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
-import Sirius.server.search.CidsServerSearch;
+
+import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
 
@@ -33,15 +18,20 @@ import java.util.Collection;
 
 import de.cismet.cids.custom.wrrl_db_mv.commons.WRRLUtil;
 
+import de.cismet.cids.server.search.AbstractCidsServerSearch;
+
 /**
  * Searchs for the LAWA types which are contained within a WK-FG.
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class WkFgLawaTypeSearch extends CidsServerSearch {
+public class WkFgLawaTypeSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
+
+    /** LOGGER. */
+    private static final transient Logger LOG = Logger.getLogger(WkFgLawaTypeSearch.class);
 
     private static final String QUERY = "SELECT nr.code, nr.description, wk_fg_total_length.length AS wk_fg_length,  \n"
                 + "	(case when lbis.wert > bis.wert then bis.wert else lbis.wert end) - \n"
@@ -199,13 +189,13 @@ public class WkFgLawaTypeSearch extends CidsServerSearch {
 
     @Override
     public Collection performServerSearch() {
-        final MetaService ms = (MetaService)getActiveLoaclServers().get(WRRLUtil.DOMAIN_NAME);
+        final MetaService ms = (MetaService)getActiveLocalServers().get(WRRLUtil.DOMAIN_NAME);
 
         if (ms != null) {
             try {
                 String query = String.format(QUERY, wkFgId);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("query: " + query); // NOI18N
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("query: " + query); // NOI18N
                 }
                 ArrayList<ArrayList> lists = ms.performCustomSearch(query);
 
@@ -213,18 +203,18 @@ public class WkFgLawaTypeSearch extends CidsServerSearch {
                     return lists;
                 } else {
                     query = String.format(QUERY_WITHOUT_LAWA, wkFgId);
-                    if (getLog().isDebugEnabled()) {
-                        getLog().debug("query: " + query); // NOI18N
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("query: " + query); // NOI18N
                     }
                     lists = ms.performCustomSearch(query);
 
                     return lists;
                 }
             } catch (RemoteException ex) {
-                getLog().error(ex.getMessage(), ex);
+                LOG.error(ex.getMessage(), ex);
             }
         } else {
-            getLog().error("active local server not found"); // NOI18N
+            LOG.error("active local server not found"); // NOI18N
         }
 
         return null;
