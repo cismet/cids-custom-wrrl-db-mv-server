@@ -8,7 +8,8 @@
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
-import Sirius.server.search.CidsServerSearch;
+
+import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
 
@@ -18,15 +19,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
+import de.cismet.cids.server.search.AbstractCidsServerSearch;
+
 /**
  * DOCUMENT ME!
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class AnsprechpartnerSearch extends CidsServerSearch {
+public class AnsprechpartnerSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
+
+    /** LOGGER. */
+    private static final transient Logger LOG = Logger.getLogger(AnsprechpartnerSearch.class);
 
     private static final String QUERY = "select a.id, s.name, a.email, a.name, a.tel, "
                 + "   s_von.wert as startPoint, s_bis.wert as endPoint "
@@ -67,7 +73,7 @@ public class AnsprechpartnerSearch extends CidsServerSearch {
 
     @Override
     public Collection performServerSearch() {
-        final MetaService ms = (MetaService)getActiveLoaclServers().get(WRRL_DOMAIN);
+        final MetaService ms = (MetaService)getActiveLocalServers().get(WRRL_DOMAIN);
 
         if (ms != null) {
             try {
@@ -76,16 +82,16 @@ public class AnsprechpartnerSearch extends CidsServerSearch {
                         route_gwk,
                         String.format(Locale.US, "%f", from),
                         String.format(Locale.US, "%f", to));
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("query: " + query); // NOI18N
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("query: " + query); // NOI18N
                 }
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
-                getLog().error(ex.getMessage(), ex);
+                LOG.error(ex.getMessage(), ex);
             }
         } else {
-            getLog().error("active local server not found"); // NOI18N
+            LOG.error("active local server not found"); // NOI18N
         }
 
         return null;

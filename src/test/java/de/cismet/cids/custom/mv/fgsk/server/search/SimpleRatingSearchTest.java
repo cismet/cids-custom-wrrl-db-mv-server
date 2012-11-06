@@ -16,8 +16,8 @@ import Sirius.server.newuser.User;
 import Sirius.server.newuser.UserGroup;
 import Sirius.server.property.ServerProperties;
 import Sirius.server.registry.Registry;
-import Sirius.server.search.CidsServerSearch;
 import Sirius.server.sql.DBConnectionPool;
+import de.cismet.cids.server.search.CidsServerSearch;
 
 import org.junit.After;
 import org.junit.AfterClass;

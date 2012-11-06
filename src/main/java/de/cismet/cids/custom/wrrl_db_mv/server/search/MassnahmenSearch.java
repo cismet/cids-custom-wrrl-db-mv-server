@@ -8,7 +8,8 @@
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
-import Sirius.server.search.CidsServerSearch;
+
+import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
 
@@ -17,15 +18,20 @@ import java.util.Collection;
 
 import de.cismet.cids.custom.wrrl_db_mv.commons.WRRLUtil;
 
+import de.cismet.cids.server.search.AbstractCidsServerSearch;
+
 /**
  * Search for the gup_unterhaltungsmassnamen, which are contained in the given gup_los.
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MassnahmenSearch extends CidsServerSearch {
+public class MassnahmenSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
+
+    /** LOGGER. */
+    private static final transient Logger LOG = Logger.getLogger(MassnahmenSearch.class);
 
     private static final String QUERY =
         "select pvon.wert, pbis.wert, g.name, p.name, a.name, b.ort, von.wert, bis.wert, "
@@ -64,21 +70,21 @@ public class MassnahmenSearch extends CidsServerSearch {
 
     @Override
     public Collection performServerSearch() {
-        final MetaService ms = (MetaService)getActiveLoaclServers().get(WRRLUtil.DOMAIN_NAME);
+        final MetaService ms = (MetaService)getActiveLocalServers().get(WRRLUtil.DOMAIN_NAME);
 
         if (ms != null) {
             try {
                 final String query = String.format(QUERY, losId);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("query: " + query); // NOI18N
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("query: " + query); // NOI18N
                 }
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
-                getLog().error(ex.getMessage(), ex);
+                LOG.error(ex.getMessage(), ex);
             }
         } else {
-            getLog().error("active local server not found"); // NOI18N
+            LOG.error("active local server not found"); // NOI18N
         }
 
         return null;
