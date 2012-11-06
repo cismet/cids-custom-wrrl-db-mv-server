@@ -8,7 +8,6 @@
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
-import Sirius.server.search.CidsServerSearch;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +18,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
+
+import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
  * Sucht nach den Naturschutzgebieten, die auf der uebergebenen Strecke liegen. Folgende PL/SQL Funktionen muessen der
@@ -36,7 +37,7 @@ import java.util.Locale;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class NaturschutzgebietSearch extends CidsServerSearch {
+public class NaturschutzgebietSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -120,7 +121,7 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
 
     @Override
     public Collection performServerSearch() {
-        final MetaService ms = (MetaService)getActiveLoaclServers().get(WRRL_DOMAIN);
+        final MetaService ms = (MetaService)getActiveLocalServers().get(WRRL_DOMAIN);
 
         if (ms != null) {
             try {
@@ -129,8 +130,8 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
                         route_gwk,
                         String.format(Locale.US, "%f", from),
                         String.format(Locale.US, "%f", to));
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("query: " + query); // NOI18N
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("query: " + query); // NOI18N
                 }
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
 
@@ -144,10 +145,10 @@ public class NaturschutzgebietSearch extends CidsServerSearch {
 //                }
                 return lists;
             } catch (RemoteException ex) {
-                getLog().error(ex.getMessage(), ex);
+                LOG.error(ex.getMessage(), ex);
             }
         } else {
-            getLog().error("active local server not found"); // NOI18N
+            LOG.error("active local server not found"); // NOI18N
         }
 
         return null;
