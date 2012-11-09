@@ -26,14 +26,14 @@ public class UmlandnutzerToStringConverter extends CustomToStringConverter {
 
         if ((vorname != null) || (nachname != null)) {
             if (vorname == null) {
-                return nachname;
+                return "Person: " + nachname;
             } else if (nachname == null) {
-                return vorname;
+                return "Person: " + vorname;
             } else {
-                return vorname + " " + nachname;
+                return "Person: " + vorname + " " + nachname;
             }
         } else {
-            return "unbenannt";
+            return "Person: unbenannt";
         }
     }
 }
