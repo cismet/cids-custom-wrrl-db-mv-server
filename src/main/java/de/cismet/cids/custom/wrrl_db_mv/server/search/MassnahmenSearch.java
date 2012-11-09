@@ -36,7 +36,7 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
     private static final String QUERY =
         "select pvon.wert, pbis.wert, g.name, p.name, a.name, b.ort, von.wert, bis.wert, "
                 + "m.randstreifenbreite, m.boeschungsbreite, m.boeschungslaenge, "
-                + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite from "
+                + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite, cbmprom, stueck from "
                 + "gup_unterhaltungsmassnahme m "
                 + "left outer join gup_planungsabschnitt p on (m.planungsabschnitt = p.id) "
                 + "left outer join station_linie psl on (p.linie = psl.id) "

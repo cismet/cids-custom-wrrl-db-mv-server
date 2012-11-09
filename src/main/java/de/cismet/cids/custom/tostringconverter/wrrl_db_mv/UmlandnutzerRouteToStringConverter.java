@@ -15,7 +15,7 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GupUnterhaltungserfordernisRouteToStringConverter extends CustomToStringConverter {
+public class UmlandnutzerRouteToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
@@ -26,9 +26,9 @@ public class GupUnterhaltungserfordernisRouteToStringConverter extends CustomToS
         final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
 
         if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Unterhaltungserfordernis: " + routenname + " [" + start + "-" + end + "]";
+            return "Umlandnutzer: " + routenname + " [" + start + "-" + end + "]";
         } else {
-            return "Unterhaltungserfordernis: unbekannt";
+            return "Umlandnutzer: unbekannt";
         }
     }
 
