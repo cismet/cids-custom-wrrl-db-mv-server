@@ -26,20 +26,49 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class MassnahmenSearch extends AbstractCidsServerSearch {
+public class MassnahmenGaebSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(MassnahmenSearch.class);
-
-    private static final String QUERY =
-        "select pvon.wert, pbis.wert, g.name, p.name, a.name, b.ort, von.wert, bis.wert, "
-                + "m.randstreifenbreite, m.boeschungsbreite, m.boeschungslaenge, "
-                + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite, m.cbmprom, m.stueck, a.id, a.leistungstext, "
-                + " CASE WHEN a.aufmass_regel is null or a.aufmass_regel = '' THEN gewerk.aufmass_regel "
-                + "ELSE a.aufmass_regel END, CASE WHEN a.einheit is null or a.einheit = '' THEN gewerk.einheit "
-                + "ELSE a.einheit END from gup_unterhaltungsmassnahme m "
+    private static final transient Logger LOG = Logger.getLogger(MassnahmenGaebSearch.class);
+    private static final String QUERY = "select m.id, "
+                + "CASE WHEN a.boeschungslaenge then "
+                + "(((case when von.wert > bis.wert then von.wert else bis.wert end) - (case when bis.wert < von.wert then bis.wert else von.wert end)) "
+                + "* coalesce(m.boeschungslaenge, 0)) "
+                + "WHEN a.cbmprom then "
+                + "(((case when von.wert > bis.wert then von.wert else bis.wert end) - (case when bis.wert < von.wert then bis.wert else von.wert end)) "
+                + "* coalesce(m.cbmprom, 0)) "
+                + "WHEN a.stueck then "
+                + "coalesce(m.stueck, 0) "
+                + "WHEN a.sohlbreite then "
+                + "(((case when von.wert > bis.wert then von.wert else bis.wert end) - (case when bis.wert < von.wert then bis.wert else von.wert end)) "
+                + "* coalesce(m.sohlbreite, 0)) "
+                + "WHEN a.deichkronenbreite then "
+                + "(((case when von.wert > bis.wert then von.wert else bis.wert end) - (case when bis.wert < von.wert then bis.wert else von.wert end)) "
+                + "* coalesce(m.deichkronenbreite, 0)) "
+                + "WHEN a.vorlandbreite then "
+                + "(((case when von.wert > bis.wert then von.wert else bis.wert end) - (case when bis.wert < von.wert then bis.wert else von.wert end)) "
+                + "* coalesce(m.vorlandbreite, 0)) "
+                + "WHEN a.randstreifenbreite then "
+                + "(((case when von.wert > bis.wert then von.wert else bis.wert end) - (case when bis.wert < von.wert then bis.wert else von.wert end)) "
+                + "* coalesce(m.randstreifenbreite, 0)) "
+                + "ELSE  "
+                + "1 "
+                + "END as menge "
+                + ", "
+                + "CASE WHEN a.boeschungslaenge or a.sohlbreite or a.deichkronenbreite or a.vorlandbreite or a.randstreifenbreite then "
+                + "'m²' "
+                + "WHEN a.cbmprom then "
+                + "'m³' "
+                + "WHEN a.stueck then "
+                + "' ' "
+                + "ELSE "
+                + "' ' "
+                + "END as einheit, "
+                + "a.leistungstext, "
+                + "a.name "
+                + "from gup_unterhaltungsmassnahme m "
                 + "left outer join gup_planungsabschnitt p on (m.planungsabschnitt = p.id) "
                 + "left outer join station_linie psl on (p.linie = psl.id) "
                 + "left outer join station pvon on (psl.von = pvon.id) "
@@ -47,12 +76,11 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
                 + "left outer join gup_gup g on (p.gup = g.id) "
                 + "left outer join gup_massnahmenart a on (m.massnahme = a.id) "
                 + "left join gup_massnahmenbezug b on (m.wo = b.id) "
-                + "left join gup_gewerk gewerk on (a.gewerk = gewerk.id) "
                 + "left join station_linie sl on (m.linie = sl.id) "
                 + "left join station von on (sl.von = von.id) "
                 + "left join station bis on (sl.bis = bis.id) "
                 + "left join route r on (von.route = r.id) "
-                + "WHERE m.los = %1$s";
+                + "WHERE m.los =  %1$s";
 
     //~ Instance fields --------------------------------------------------------
 
@@ -65,7 +93,7 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
      *
      * @param  losId  geometry DOCUMENT ME!
      */
-    public MassnahmenSearch(final String losId) {
+    public MassnahmenGaebSearch(final String losId) {
         this.losId = losId;
     }
 

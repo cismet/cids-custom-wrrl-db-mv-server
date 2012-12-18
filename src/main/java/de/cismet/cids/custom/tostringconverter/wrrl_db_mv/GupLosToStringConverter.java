@@ -5,10 +5,6 @@
 *              ... and it just works.
 *
 ****************************************************/
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.cismet.cids.custom.tostringconverter.wrrl_db_mv;
 
 import de.cismet.cids.tools.CustomToStringConverter;
@@ -19,20 +15,18 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class SchutzgebietToStringConverter extends CustomToStringConverter {
+public class GupLosToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
     public String createString() {
-        final String routenname = String.valueOf(cidsBean.getProperty("linie.von.route.routenname"));
-        final String start = String.valueOf(cidsBean.getProperty("linie.von.wert"));
-        final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
+        final String name = String.valueOf(cidsBean.getProperty("bezeichnung"));
 
-        if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Schutzgebiet: " + routenname + " [" + start + "-" + end + "]";
+        if (!isStringNull(name)) {
+            return name;
         } else {
-            return "Schutzgebiet: unbekannt";
+            return "unbenannt";
         }
     }
 
