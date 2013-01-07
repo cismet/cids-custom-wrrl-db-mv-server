@@ -8,7 +8,6 @@
 package de.cismet.cids.custom.wrrl_db_mv.fgsk.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
-import Sirius.server.search.CidsServerSearch;
 
 import org.apache.log4j.Logger;
 
@@ -17,13 +16,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import de.cismet.cids.server.search.AbstractCidsServerSearch;
+
 /**
  * DOCUMENT ME!
  *
  * @author   martin.scholl@cismet.de
  * @version  $Revision$, $Date$
  */
-public abstract class AbstractCalcCacheSearch extends CidsServerSearch {
+public abstract class AbstractCalcCacheSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -56,7 +57,7 @@ public abstract class AbstractCalcCacheSearch extends CidsServerSearch {
     @Override
     public Collection performServerSearch() {
         // FIXME: would use CidsBeanSupport.DOMAIN but there is no dependency
-        final MetaService ms = (MetaService)getActiveLoaclServers().get(SimpleRatingSearch.WRRL_DOMAIN); // NOI18N
+        final MetaService ms = (MetaService)getActiveLocalServers().get(SimpleRatingSearch.WRRL_DOMAIN); // NOI18N
 
         if (ms == null) {
             final String message = "cannot find metaservice for wrrl domain: " + SimpleRatingSearch.WRRL_DOMAIN; // NOI18N

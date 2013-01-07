@@ -5,6 +5,10 @@
 *              ... and it just works.
 *
 ****************************************************/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package de.cismet.cids.custom.tostringconverter.wrrl_db_mv;
 
 import de.cismet.cids.tools.CustomToStringConverter;
@@ -15,7 +19,7 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GupUnterhaltungserfordernisRouteToStringConverter extends CustomToStringConverter {
+public class SchutzgebietRouteToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
@@ -26,9 +30,9 @@ public class GupUnterhaltungserfordernisRouteToStringConverter extends CustomToS
         final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
 
         if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Unterhaltungserfordernis: " + routenname + " [" + start + "-" + end + "]";
+            return "Schutzgebiet: " + routenname + " [" + start + "-" + end + "]";
         } else {
-            return "Unterhaltungserfordernis: unbekannt";
+            return "Schutzgebiet: unbekannt";
         }
     }
 

@@ -26,14 +26,14 @@ import de.cismet.cids.trigger.CidsTriggerKey;
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CidsTrigger.class)
-public class FgskKartierabschnittTrigger extends AbstractDBAwareCidsTrigger {
+public class GupTrigger extends AbstractDBAwareCidsTrigger {
 
     //~ Static fields/initializers ---------------------------------------------
 
     private static final transient org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(
-            FgskKartierabschnittTrigger.class);
-    private static final String FGSK_KARTIERABSCHNITT_CLASS_NAME = "de.cismet.cids.dynamics.Fgsk_kartierabschnitt";
-    private static final String FGSK_KARTIERABSCHNITT_TABLE_NAME = "fgsk_kartierabschnitt";
+            GupTrigger.class);
+    private static final String GUP_LOS_CLASS_NAME = "de.cismet.cids.dynamics.Gup_los";
+    private static final String GUP_LOS_TABLE_NAME = "gup_los";
 
     //~ Methods ----------------------------------------------------------------
 
@@ -63,7 +63,7 @@ public class FgskKartierabschnittTrigger extends AbstractDBAwareCidsTrigger {
 
     @Override
     public CidsTriggerKey getTriggerKey() {
-        return new CidsTriggerKey(CidsTriggerKey.ALL, FGSK_KARTIERABSCHNITT_TABLE_NAME);
+        return new CidsTriggerKey(CidsTriggerKey.ALL, GUP_LOS_TABLE_NAME);
     }
 
     /**
@@ -85,38 +85,27 @@ public class FgskKartierabschnittTrigger extends AbstractDBAwareCidsTrigger {
      *
      * @return  DOCUMENT ME!
      */
-    private boolean isKartierabschnittObject(final CidsBean cidsBean) {
-        return (cidsBean.getClass().getName().equals(FGSK_KARTIERABSCHNITT_CLASS_NAME));
+    private boolean isGupLos(final CidsBean cidsBean) {
+        return (cidsBean.getClass().getName().equals(GUP_LOS_CLASS_NAME));
     }
 
     @Override
     public void afterCommittedInsert(final CidsBean cidsBean, final User user) {
-        renumber(cidsBean);
     }
 
     @Override
     public void afterCommittedUpdate(final CidsBean cidsBean, final User user) {
-        renumber(cidsBean);
     }
 
     @Override
     public void afterCommittedDelete(final CidsBean cidsBean, final User user) {
-        renumber(cidsBean);
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param  cidsBean  DOCUMENT ME!
-     */
-    private void renumber(final CidsBean cidsBean) {
-        if (isKartierabschnittObject(cidsBean)) {
+        if (isGupLos(cidsBean)) {
             try {
-                final Object gwk = cidsBean.getProperty("linie.von.route.gwk");
+                final Object id = cidsBean.getProperty("id");
                 final Statement s = getDbServer().getActiveDBConnection().getConnection().createStatement();
-                s.execute("select fgsk_abschnitte_nummerieren(" + gwk.toString() + ", null)");
+                s.execute("update gup_unterhaltungsmassnahme set los = null where los = " + id.toString());
             } catch (Exception e) {
-                log.error("Error while executing fgsk trigger.", e);
+                log.error("Error while executing los trigger.", e);
             }
         }
     }
