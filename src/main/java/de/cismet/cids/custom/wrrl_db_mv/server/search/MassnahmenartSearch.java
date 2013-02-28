@@ -62,6 +62,7 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
      * @param  zweiter_ausfuehrungszeitpunkt  DOCUMENT ME!
      * @param  gewerk                         DOCUMENT ME!
      * @param  verbleib                       DOCUMENT ME!
+     * @param  kompartiment                   DOCUMENT ME!
      */
     public MassnahmenartSearch(final String intervall,
             final String einsatzvariante,
@@ -69,7 +70,8 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
             final String ausfuehrungszeitpunkt,
             final String zweiter_ausfuehrungszeitpunkt,
             final String gewerk,
-            final String verbleib) {
+            final String verbleib,
+            final String kompartiment) {
         this.intervall = intervall;
         this.einsatzvariante = einsatzvariante;
         this.geraet = geraet;
@@ -77,6 +79,7 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
         this.zweiter_ausfuehrungszeitpunkt = zweiter_ausfuehrungszeitpunkt;
         this.gewerk = gewerk;
         this.verbleib = verbleib;
+        this.kompartiment = kompartiment;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -152,6 +155,13 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
                     }
                     ++conditions;
                 }
+
+                if (conditions == 0) {
+                    newQuery += " WHERE kompartiment = " + kompartiment;
+                } else {
+                    newQuery += " AND kompartiment = " + kompartiment;
+                }
+                ++conditions;
 
 //                final String query = String.format(
 //                        QUERY,
