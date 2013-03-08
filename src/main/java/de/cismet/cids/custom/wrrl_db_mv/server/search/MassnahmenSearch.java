@@ -36,10 +36,10 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
     private static final String QUERY =
         "select pvon.wert, pbis.wert, g.name, p.name, a.name, b.ort, von.wert, bis.wert, "
                 + "m.randstreifenbreite, m.boeschungsbreite, m.boeschungslaenge, "
-                + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite, m.cbmprom, m.stueck, a.id, a.leistungstext, "
+                + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite, m.cbmprom, m.stueck, m.stunden, m.schnitttiefe, a.id, a.leistungstext, "
                 + " CASE WHEN a.aufmass_regel is null or a.aufmass_regel = '' THEN gewerk.aufmass_regel "
                 + "ELSE a.aufmass_regel END, CASE WHEN a.einheit is null or a.einheit = '' THEN gewerk.einheit "
-                + "ELSE a.einheit END from gup_unterhaltungsmassnahme m "
+                + "ELSE a.einheit END, m.id, p.id, g.id from gup_unterhaltungsmassnahme m "
                 + "left outer join gup_planungsabschnitt p on (m.planungsabschnitt = p.id) "
                 + "left outer join station_linie psl on (p.linie = psl.id) "
                 + "left outer join station pvon on (psl.von = pvon.id) "
