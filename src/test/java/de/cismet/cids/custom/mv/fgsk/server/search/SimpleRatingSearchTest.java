@@ -36,9 +36,9 @@ import java.util.Map;
 import java.util.Properties;
 
 
-import de.cismet.remotetesthelper.RemoteTestHelperService;
+//import de.cismet.remotetesthelper.RemoteTestHelperService;
 
-import de.cismet.remotetesthelper.ws.rest.RemoteTestHelperClient;
+//import de.cismet.remotetesthelper.ws.rest.RemoteTestHelperClient;
 
 import de.cismet.tools.ScriptRunner;
 
@@ -55,7 +55,7 @@ public class SimpleRatingSearchTest {
     //~ Static fields/initializers ---------------------------------------------
 
     private static final String TEST_DB_NAME = "simple_rating_search_test_db";
-    private static final RemoteTestHelperService SERVICE = new RemoteTestHelperClient();
+//    private static final RemoteTestHelperService SERVICE = new RemoteTestHelperClient();
     private static final String SERVER_CONFIG =
         "src/test/resources/de/cismet/cids/custom/mv/fgsk/server/search/runtime.properties"; // NOI18N
 
@@ -80,7 +80,7 @@ public class SimpleRatingSearchTest {
      * @throws  Throwable              DOCUMENT ME!
      * @throws  IllegalStateException  DOCUMENT ME!
      */
-    @BeforeClass
+//    @BeforeClass
     public static void setUpClass() throws Throwable {
         final Properties p = new Properties();
         p.put("log4j.appender.Remote", "org.apache.log4j.net.SocketAppender");
@@ -90,9 +90,9 @@ public class SimpleRatingSearchTest {
         p.put("log4j.rootLogger", "ALL,Remote");
         org.apache.log4j.PropertyConfigurator.configure(p);
 
-        if (!Boolean.valueOf(SERVICE.initCidsSystem(TEST_DB_NAME))) {
-            throw new IllegalStateException("cannot initilise test db");
-        }
+//        if (!Boolean.valueOf(SERVICE.initCidsSystem(TEST_DB_NAME))) {
+//            throw new IllegalStateException("cannot initilise test db");
+//        }
         final ServerProperties props = new ServerProperties(SERVER_CONFIG);
         final DBConnectionPool pool = new DBConnectionPool(props);
         final Connection con = pool.getConnection();
@@ -115,7 +115,7 @@ public class SimpleRatingSearchTest {
      * @throws  Throwable              Exception DOCUMENT ME!
      * @throws  IllegalStateException  DOCUMENT ME!
      */
-    @AfterClass
+//    @AfterClass
     public static void tearDownClass() throws Throwable {
         // server shuts down all the other instances since we'return interface simple mode
         try {
@@ -127,9 +127,9 @@ public class SimpleRatingSearchTest {
             System.err.println("exit error");
         }
 
-        if (!Boolean.valueOf(SERVICE.dropDatabase(TEST_DB_NAME))) {
-            throw new IllegalStateException("could not drop test db");
-        }
+//        if (!Boolean.valueOf(SERVICE.dropDatabase(TEST_DB_NAME))) {
+//            throw new IllegalStateException("could not drop test db");
+//        }
     }
 
     /**
@@ -160,7 +160,7 @@ public class SimpleRatingSearchTest {
      *
      * @throws  Exception  DOCUMENT ME!
      */
-    @Test
+//    @Test
     public void testPerformWBTrimmingRatingSearch() throws Exception {
         System.out.println("TEST " + getCurrentMethodName());
 
@@ -210,7 +210,7 @@ public class SimpleRatingSearchTest {
      *
      * @throws  Exception  DOCUMENT ME!
      */
-    @Test
+//    @Test
     public void testPerformWBLandUseRatingSearch() throws Exception {
         System.out.println("TEST " + getCurrentMethodName());
 
@@ -260,7 +260,7 @@ public class SimpleRatingSearchTest {
      *
      * @throws  Exception  DOCUMENT ME!
      */
-    @Test
+//    @Test
     public void testPerformBadEnvStructureRatingSearch() throws Exception {
         System.out.println("TEST " + getCurrentMethodName());
 
