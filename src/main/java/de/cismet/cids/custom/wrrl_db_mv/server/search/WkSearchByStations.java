@@ -36,8 +36,8 @@ public class WkSearchByStations extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(WkSearchByStations.class);
 
     private static final String QUERY = "SELECT   wk_fg.wk_k   , "
-                + "         MIN(von.wert), "
-                + "         MAX(bis.wert) "
+                + "         least(von.wert,bis.wert), "
+                + "         greatest(von.wert,bis.wert) "
                 + "FROM     wk_fg        , "
                 + "         wk_fg_teile  , "
                 + "         wk_teil      , "
@@ -52,16 +52,20 @@ public class WkSearchByStations extends AbstractCidsServerSearch {
                 + "AND      station_linie.bis=bis.id "
                 + "AND      von.route        =route.id "
                 + "AND      route.gwk        ={0} "
-                + "GROUP BY wk_fg.wk_k "
-                + "HAVING   ( "
+                + "AND   ( "
                 + "                  ( "
-                + "                           {1}  >= MIN(von.wert) "
-                + "                  AND      {1}  < MAX(bis.wert) "
+                + "                      least(von.wert,bis.wert) <= {1}    "
+                + "                  and greatest(von.wert,bis.wert) >= {1} "
                 + "                  ) "
                 + "         OR "
                 + "                  ( "
-                + "                           {2}  > MIN(von.wert) "
-                + "                  AND      {2}  <= MAX(bis.wert) "
+                + "                      greatest(von.wert,bis.wert) >= {2} "
+                + "                  and least(von.wert,bis.wert) <= {2} "
+                + "                  ) "
+                + "        OR "
+                + "                  ( "
+                + "                      least(von.wert,bis.wert) >= {1} "
+                + "                  and greatest(von.wert,bis.wert) <= {2} "
                 + "                  ) "
                 + "         ) "
 //                + "HAVING   ( "
@@ -80,7 +84,7 @@ public class WkSearchByStations extends AbstractCidsServerSearch {
 //                + "                  AND      {2}  >=MAX(bis.wert) "
 //                + "                  ) "
 //                + "         ) "
-                + "ORDER BY MIN(von.wert)";
+                + "ORDER BY least(von.wert,bis.wert)";
 //    private static final String QUERY = "SELECT   wk_fg.wk_k   , "
 //                + "         MIN(von.wert), "
 //                + "         MAX(bis.wert) "
@@ -175,8 +179,8 @@ public class WkSearchByStations extends AbstractCidsServerSearch {
     public static void main(final String[] args) {
         System.out.println(MessageFormat.format(
                 QUERY,
-                "4711",
-                String.format(Locale.US, "%f", 0.67),
-                String.format(Locale.US, "%f", 859457f)));
+                "964540000000",
+                String.format(Locale.US, "%f", 0.0),
+                String.format(Locale.US, "%f", 9343.0)));
     }
 }
