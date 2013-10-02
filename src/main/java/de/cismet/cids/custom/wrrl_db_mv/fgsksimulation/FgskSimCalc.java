@@ -168,6 +168,10 @@ public class FgskSimCalc {
             String costFormula = (String)simMaBean.getProperty("kosten");
             String calculationRule = (String)simMaBean.getProperty("kostenformel");
 
+            if (calculationRule == null) {
+                return 0.0;
+            }
+
             if (costFormula != null) {
                 costFormula = replaceVariables(costFormula, kaBean);
                 final Object costs = engine.eval(costFormula);
