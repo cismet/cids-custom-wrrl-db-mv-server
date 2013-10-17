@@ -67,9 +67,9 @@ public abstract class ComplexRatingSearch extends AbstractCalcCacheSearch {
                 final double rFrom = ((BigDecimal)row.get(1)).doubleValue();
                 final double rTo = ((BigDecimal)row.get(2)).doubleValue();
                 final Number rating;
-                if(row.get(3) instanceof Integer){
+                if (row.get(3) instanceof Integer) {
                     rating = (Integer)row.get(3);
-                } else if(row.get(3) instanceof BigDecimal){
+                } else if (row.get(3) instanceof BigDecimal) {
                     rating = ((BigDecimal)row.get(3)).doubleValue();
                 } else {
                     throw new IllegalStateException("unsupported column type: " + row.get(3).getClass());
@@ -92,7 +92,7 @@ public abstract class ComplexRatingSearch extends AbstractCalcCacheSearch {
                     range = new Range(rFrom, rTo);
                     rangeCache.put(rangeKey, range);
                 }
-                
+
                 rMap.put(range, rating);
             }
         } catch (final Exception ex) {
