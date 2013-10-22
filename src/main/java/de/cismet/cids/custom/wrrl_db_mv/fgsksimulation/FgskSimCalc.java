@@ -219,10 +219,10 @@ public class FgskSimCalc {
         }
 
         String newFormula = formula.replaceAll("LAENGE", String.valueOf(getKaLength(kaBean)));
+        newFormula = newFormula.replaceAll("SOHLBREITE", String.valueOf(bedBreadth));
         newFormula = newFormula.replaceAll("BREITE", String.valueOf(breadth));
         newFormula = newFormula.replaceAll("TYP", String.valueOf(wbType));
         newFormula = newFormula.replaceAll("SUBSTRAT", String.valueOf(sohlsubstrKuenst));
-        newFormula = newFormula.replaceAll("SOHLBREITE", String.valueOf(bedBreadth));
 
         return newFormula;
     }
