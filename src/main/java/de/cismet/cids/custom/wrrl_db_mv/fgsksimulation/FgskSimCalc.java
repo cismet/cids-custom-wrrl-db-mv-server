@@ -29,7 +29,7 @@ public class FgskSimCalc {
     //~ Static fields/initializers ---------------------------------------------
 
     private static Logger LOG = Logger.getLogger(FgskSimCalc.class);
-    public static int THRESHHOLD = 90;
+    public static int THRESHHOLD = 100;
 
     //~ Constructors -----------------------------------------------------------
 
