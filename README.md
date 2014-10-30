@@ -1,4 +1,4 @@
-cids-custom-wrrl-db-mv-server
+cids-custom-wrrl-db-mv-server [![Build Status](http://ci.cismet.de/buildStatus/icon?job=cids-custom-wrrl-db-mv-server)](https://ci.cismet.de/job/cids-custom-wrrl-db-mv-server/)
 =============================
 
 Serverside customizations of the cids system for the FIS Wasser System, FGSK Topic and GUP-MV.
