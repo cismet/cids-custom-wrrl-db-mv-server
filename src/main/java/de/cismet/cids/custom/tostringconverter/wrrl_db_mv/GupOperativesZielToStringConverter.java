@@ -15,21 +15,15 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GupUnterhaltungserfordernisRouteToStringConverter extends CustomToStringConverter {
+public class GupOperativesZielToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
     public String createString() {
-        final String routenname = String.valueOf(cidsBean.getProperty("linie.von.route.routenname"));
-        final String start = String.valueOf(cidsBean.getProperty("linie.von.wert"));
-        final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
+        final Object name = cidsBean.getProperty("name");
 
-        if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Situationstyp: " + routenname + " [" + start + "-" + end + "]";
-        } else {
-            return "Situationstyp: unbekannt";
-        }
+        return (name == null) ? "Neues Pflegeziel" : name.toString();
     }
 
     /**
