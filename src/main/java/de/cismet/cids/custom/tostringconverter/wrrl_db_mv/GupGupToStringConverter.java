@@ -24,9 +24,9 @@ public class GupGupToStringConverter extends CustomToStringConverter {
         final String name = String.valueOf(cidsBean.getProperty("name"));
 
         if (!isStringNull(name)) {
-            return "GUP: " + name;
+            return "GEPP: " + name;
         } else {
-            return "GUP: unbenannt";
+            return "GEPP: unbenannt";
         }
     }
 

@@ -22,6 +22,6 @@ public class GupUnterhaltungserfordernisToStringConverter extends CustomToString
     @Override
     public String createString() {
         final Object name = cidsBean.getProperty("name_beschreibung");
-        return (name == null) ? "Neues Unterhaltungserfordernis" : name.toString();
+        return (name == null) ? "Neuer Situationstyp" : name.toString();
     }
 }
