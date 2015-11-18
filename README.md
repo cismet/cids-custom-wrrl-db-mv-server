@@ -1,4 +1,4 @@
-cids-custom-wrrl-db-mv-server
+cids-custom-wrrl-db-mv-server [![Build Status](http://ci.cismet.de/buildStatus/icon?job=cids-custom-wrrl-db-mv-server)](https://ci.cismet.de/job/cids-custom-wrrl-db-mv-server/)
 =============================
 
 Serverside customizations of the cids system for the FIS Wasser System, FGSK Topic and GUP-MV.
@@ -37,3 +37,8 @@ German Federal State Agency for the Envrionment, Nature Protection and Geology M
 
 
 Don't hesitate to contact us if you have any questions.
+
+License
+=======
+
+cids-custom-wrrl-db-mv-server is distributed under [LGPLv3](https://github.com/cismet/cids-custom-wrrl-db-mv-server/blob/dev/LICENSE)
