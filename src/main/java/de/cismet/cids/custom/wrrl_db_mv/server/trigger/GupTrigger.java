@@ -9,8 +9,6 @@ package de.cismet.cids.custom.wrrl_db_mv.server.trigger;
 
 import Sirius.server.localserver.DBServer;
 import Sirius.server.newuser.User;
-import Sirius.server.search.Query;
-import Sirius.server.search.QueryIdentifier;
 
 import org.openide.util.lookup.ServiceProvider;
 
