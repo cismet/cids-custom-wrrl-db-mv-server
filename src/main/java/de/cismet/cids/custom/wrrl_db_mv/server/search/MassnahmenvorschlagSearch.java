@@ -47,6 +47,7 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
 
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MassnahmenvorschlagSearch.class);
+    private static final String MO_QUERY = "select distinct %s, %s as id";
     private static final String QUERY = "SELECT DISTINCT "
                 + "                (SELECT id "
                 + "                FROM    cs_class "
@@ -100,8 +101,7 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
     // + "join sim_massnahmen_wirkung w on m.id = w.massnahme join la_lawa_nr l "
     // + "on gewaessertyp = l.id where l.code = %1$s";
 
-    private MetaObject fgsk_mo;
-    private User usr;
+    private String json;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -112,8 +112,7 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
      * @param  usr      DOCUMENT ME!
      */
     public MassnahmenvorschlagSearch(final MetaObject fgsk_mo, final User usr) {
-        this.fgsk_mo = fgsk_mo;
-        this.usr = usr;
+        this.json = fgsk_mo.getBean().toJSONString(true);
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -124,21 +123,26 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final Object gewTyp = fgsk_mo.getBean().getProperty("gewaessertyp_id.value");
+                final CidsBean fgskBean;
+                try {
+                    fgskBean = CidsBean.createNewCidsBeanFromJSON(true, json);
+                } catch (Exception e) {
+                    LOG.error("Error while creating cids bean from json", e);
+                    return null;
+                }
+                final Object gewTyp = fgskBean.getProperty("gewaessertyp_id.value");
                 final String query = String.format(QUERY, String.valueOf(gewTyp));
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
                 }
                 // Alle Regeln laden die auf Typ passen
-                final MetaObject[] rules = ms.getMetaObject(usr, query);
+                final MetaObject[] rules = ms.getMetaObject(getUser(), query);
                 final ArrayList<CidsBean> resultCandidates = new ArrayList<CidsBean>(rules.length);
                 final ArrayList<MassnahmenEffizienz> wirkungen = new ArrayList<MassnahmenEffizienz>(rules.length);
 
-                final CidsBean kaBean = fgsk_mo.getBean();
-
                 for (final MetaObject rule : rules) {
-                    if (FgskSimCalc.getInstance().isRuleFulfilled(kaBean, rule.getBean())) {
+                    if (FgskSimCalc.getInstance().isRuleFulfilled(fgskBean, rule.getBean())) {
                         final List<CidsBean> candidates = rule.getBean().getBeanCollectionProperty("kandidaten");
                         final String hinweis = (String)rule.getBean().getProperty("hinweis");
                         if (candidates != null) {
@@ -164,7 +168,7 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
 
                     for (final CidsBean mn : einzelmassnahmen) {
                         try {
-                            price += FgskSimCalc.getInstance().calcCosts(fgsk_mo.getBean(), mn);
+                            price += FgskSimCalc.getInstance().calcCosts(fgskBean, mn);
                             final List<CidsBean> massnahmeWirkungen = mn.getBeanCollectionProperty("wirkungen");
 
                             for (final CidsBean wirkungBean : massnahmeWirkungen) {
