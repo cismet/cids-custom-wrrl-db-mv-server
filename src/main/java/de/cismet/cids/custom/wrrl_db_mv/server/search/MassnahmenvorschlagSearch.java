@@ -12,6 +12,7 @@
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.middleware.types.MetaClass;
 import Sirius.server.middleware.types.MetaObject;
 import Sirius.server.middleware.types.MetaObjectNode;
 import Sirius.server.middleware.types.Node;
@@ -48,6 +49,7 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MassnahmenvorschlagSearch.class);
     private static final String MO_QUERY = "select distinct %s, %s as id";
+    private static final String COSTS_QUERY = "select %1s, id from %2s ";
     private static final String QUERY = "SELECT DISTINCT "
                 + "                (SELECT id "
                 + "                FROM    cs_class "
@@ -168,7 +170,7 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
 
                     for (final CidsBean mn : einzelmassnahmen) {
                         try {
-                            price += FgskSimCalc.getInstance().calcCosts(fgskBean, mn);
+                            price += FgskSimCalc.getInstance().calcCosts(fgskBean, mn, getFlCosts(ms));
                             final List<CidsBean> massnahmeWirkungen = mn.getBeanCollectionProperty("wirkungen");
 
                             for (final CidsBean wirkungBean : massnahmeWirkungen) {
@@ -213,6 +215,27 @@ public class MassnahmenvorschlagSearch extends AbstractCidsServerSearch {
         }
 
         return null;
+    }
+
+    /**
+     * Get all objects of type sim_flaechenerwerbspreis, which are required to calculate the costs of massnahmen
+     * objects.
+     *
+     * @param   ms  a reference to the wrrl domain server
+     *
+     * @return  a list of all sim_flaechenerwerbspreis objects
+     *
+     * @throws  Exception  DOCUMENT ME!
+     */
+    private List<MetaObject> getFlCosts(final MetaService ms) throws Exception {
+        final MetaClass mc = ms.getClassByTableName(getUser(), "sim_flaechenerwerbspreis");
+        final String query = String.format(QUERY, mc.getID(), mc.getTableName());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("query: " + query); // NOI18N
+        }
+        final MetaObject[] lists = ms.getMetaObject(getUser(), query);
+
+        return Arrays.asList(lists);
     }
 
     /**

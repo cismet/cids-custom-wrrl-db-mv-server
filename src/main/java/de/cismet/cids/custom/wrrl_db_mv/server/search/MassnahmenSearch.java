@@ -39,7 +39,7 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
                 + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite, m.cbmprom, m.stueck, m.stunden, m.schnitttiefe, a.id, a.leistungstext, "
                 + " CASE WHEN a.aufmass_regel is null or a.aufmass_regel = '' THEN gewerk.aufmass_regel "
                 + "ELSE a.aufmass_regel END, CASE WHEN a.einheit is null or a.einheit = '' THEN gewerk.einheit "
-                + "ELSE a.einheit END, m.id, p.id, g.id from gup_unterhaltungsmassnahme m "
+                + "ELSE a.einheit END, m.id, p.id, g.id, r.gwk, a.massnahmen_id from gup_unterhaltungsmassnahme m "
                 + "join gup_los_gup_unterhaltungsmassnahme lgu on (m.id = lgu.gup_unterhaltungsmassnahme)"
                 + "left join gup_planungsabschnitt_gup_unterhaltungsmassnahme pgu on (m.id = pgu.gup_unterhaltungsmassnahme)"
                 + "left outer join gup_planungsabschnitt p on (pgu.gup_planungsabschnitt_reference = p.id) "
@@ -54,7 +54,7 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
                 + "left join station von on (sl.von = von.id) "
                 + "left join station bis on (sl.bis = bis.id) "
                 + "left join route r on (von.route = r.id) "
-                + "WHERE lgu.gup_los_reference = %1$s";
+                + "WHERE lgu.gup_los_reference = %1$s order by a.id";
 //    private static final String QUERY =
 //        "select pvon.wert, pbis.wert, g.name, p.name, a.name, b.ort, von.wert, bis.wert, "
 //                + "m.randstreifenbreite, m.boeschungsbreite, m.boeschungslaenge, "
@@ -78,7 +78,7 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
 
     //~ Instance fields --------------------------------------------------------
 
-    private String losId;
+    private final String losId;
 
     //~ Constructors -----------------------------------------------------------
 
