@@ -26,14 +26,14 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class WkFgIdSearch extends AbstractCidsServerSearch {
+public class FgskIdSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(WkFgIdSearch.class);
+    private static final transient Logger LOG = Logger.getLogger(FgskIdSearch.class);
 
-    private static final String QUERY = "select id from wk_fg"; // NOI18N
+    private static final String QUERY = "select id from fgsk_kartierabschnitt"; // NOI18N
 
     //~ Instance fields --------------------------------------------------------
 
@@ -46,7 +46,7 @@ public class WkFgIdSearch extends AbstractCidsServerSearch {
      *
      * @param  condition  geometry DOCUMENT ME!
      */
-    public WkFgIdSearch(final String condition) {
+    public FgskIdSearch(final String condition) {
         this.condition = condition;
     }
 
@@ -61,7 +61,7 @@ public class WkFgIdSearch extends AbstractCidsServerSearch {
                 String query = QUERY;
 
                 if (condition != null) {
-                    query += " WHERE wk_k ilike '" + condition + "'";
+                    query += " WHERE wkk ilike '" + condition + "'";
                 }
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
