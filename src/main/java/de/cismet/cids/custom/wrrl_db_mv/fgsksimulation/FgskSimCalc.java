@@ -11,7 +11,12 @@
  */
 package de.cismet.cids.custom.wrrl_db_mv.fgsksimulation;
 
+import Sirius.server.middleware.types.MetaClass;
+import Sirius.server.middleware.types.MetaObject;
+
 import org.apache.log4j.Logger;
+
+import java.util.List;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -28,7 +33,7 @@ public class FgskSimCalc {
 
     //~ Static fields/initializers ---------------------------------------------
 
-    private static Logger LOG = Logger.getLogger(FgskSimCalc.class);
+    private static final Logger LOG = Logger.getLogger(FgskSimCalc.class);
     public static int THRESHHOLD = 100;
 
     //~ Constructors -----------------------------------------------------------
@@ -47,6 +52,17 @@ public class FgskSimCalc {
      * @return  DOCUMENT ME!
      */
     public static FgskSimCalc getInstance() {
+        return LazyInitializer.INSTANCE;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param   costs  DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    public static FgskSimCalc getInstance(final List<CidsBean> costs) {
         return LazyInitializer.INSTANCE;
     }
 
@@ -156,12 +172,14 @@ public class FgskSimCalc {
      *
      * @param   kaBean     DOCUMENT ME!
      * @param   simMaBean  DOCUMENT ME!
+     * @param   flCosts    DOCUMENT ME!
      *
      * @return  DOCUMENT ME!
      *
      * @throws  Exception  DOCUMENT ME!
      */
-    public double calcCosts(final CidsBean kaBean, final CidsBean simMaBean) throws Exception {
+    public double calcCosts(final CidsBean kaBean, final CidsBean simMaBean, final List<MetaObject> flCosts)
+            throws Exception {
         try {
             final ScriptEngineManager manager = new ScriptEngineManager();
             final ScriptEngine engine = manager.getEngineByName("js");
@@ -173,7 +191,7 @@ public class FgskSimCalc {
             }
 
             if (costFormula != null) {
-                costFormula = replaceVariables(costFormula, kaBean);
+                costFormula = replaceVariables(costFormula, kaBean, flCosts);
                 final Object costs = engine.eval(costFormula);
 
                 if (costs == null) {
@@ -183,7 +201,7 @@ public class FgskSimCalc {
                 calculationRule = calculationRule.replaceAll("KOSTEN", String.valueOf(costs));
             }
 
-            calculationRule = replaceVariables(calculationRule, kaBean);
+            calculationRule = replaceVariables(calculationRule, kaBean, flCosts);
 
             final Object costs = engine.eval(calculationRule);
 
@@ -205,14 +223,17 @@ public class FgskSimCalc {
      *
      * @param   formula  DOCUMENT ME!
      * @param   kaBean   DOCUMENT ME!
+     * @param   costs    DOCUMENT ME!
      *
      * @return  DOCUMENT ME!
      */
-    private String replaceVariables(final String formula, final CidsBean kaBean) {
+    private String replaceVariables(final String formula, final CidsBean kaBean, final List<MetaObject> costs) {
         String breadth = (String)kaBean.getProperty("gewaesserbreite_id.name");
         final Double bedBreadth = (Double)kaBean.getProperty("sohlenbreite");
         final Integer wbType = (Integer)kaBean.getProperty("gewaessertyp_id.value");
         final Double sohlsubstrKuenst = (Double)kaBean.getProperty("sohlensubstrat_kue");
+        final Double landnutzungQmLinks = getFlaechennutzungKosten(kaBean, costs, true);
+        final Double landnutzungQmRechts = getFlaechennutzungKosten(kaBean, costs, false);
 
         if (breadth != null) {
             breadth = "\"" + breadth + "\"";
@@ -223,8 +244,42 @@ public class FgskSimCalc {
         newFormula = newFormula.replaceAll("BREITE", String.valueOf(breadth));
         newFormula = newFormula.replaceAll("TYP", String.valueOf(wbType));
         newFormula = newFormula.replaceAll("SUBSTRAT", String.valueOf(sohlsubstrKuenst));
+        newFormula = newFormula.replaceAll("LANDNUTZUNG_QM_LINKS", String.valueOf(landnutzungQmLinks));
+        newFormula = newFormula.replaceAll("LANDNUTZUNG_QM_RECHTS", String.valueOf(landnutzungQmRechts));
 
         return newFormula;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param   kaBean  DOCUMENT ME!
+     * @param   costs   DOCUMENT ME!
+     * @param   left    DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    private Double getFlaechennutzungKosten(final CidsBean kaBean, final List<MetaObject> costs, final boolean left) {
+        final CidsBean flBean = (CidsBean)(left ? kaBean.getProperty("flaechennutzung_links_id")
+                                                : kaBean.getProperty("flaechennutzung_rechts_id"));
+
+        if (flBean != null) {
+            if (costs != null) {
+                for (final MetaObject costBean : costs) {
+                    final List<CidsBean> flList = costBean.getBean().getBeanCollectionProperty("fgsk_flaechennutzung");
+
+                    if (flList != null) {
+                        for (final CidsBean tmp : flList) {
+                            if (tmp.getMetaObject().getId() == flBean.getMetaObject().getId()) {
+                                return (Double)costBean.getBean().getProperty("preis");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return 0.0;
     }
 
     /**
