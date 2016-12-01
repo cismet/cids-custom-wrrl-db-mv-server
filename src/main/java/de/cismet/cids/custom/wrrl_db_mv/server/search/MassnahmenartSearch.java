@@ -37,7 +37,8 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
     /** LOGGER. */
     private static final transient Logger LOG = Logger.getLogger(MassnahmenSearch.class);
 
-    private static final String QUERY = "select count(*) from gup_massnahmenart"; // NOI18N
+    private static final String QUERY = "select id, name from gup_massnahmenart";       // NOI18N
+    private static final String QUERY_COUNT = "select count(*) from gup_massnahmenart"; // NOI18N
 
     //~ Instance fields --------------------------------------------------------
 
@@ -49,6 +50,7 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
     private String zweiter_ausfuehrungszeitpunkt;
     private String gewerk;
     private String verbleib;
+    private boolean onlyCount = true;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -72,6 +74,40 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
             final String gewerk,
             final String verbleib,
             final String kompartiment) {
+        this(
+            intervall,
+            einsatzvariante,
+            geraet,
+            ausfuehrungszeitpunkt,
+            zweiter_ausfuehrungszeitpunkt,
+            gewerk,
+            verbleib,
+            kompartiment,
+            true);
+    }
+
+    /**
+     * Creates a new MassnahmenartSearch object.
+     *
+     * @param  intervall                      DOCUMENT ME!
+     * @param  einsatzvariante                DOCUMENT ME!
+     * @param  geraet                         DOCUMENT ME!
+     * @param  ausfuehrungszeitpunkt          DOCUMENT ME!
+     * @param  zweiter_ausfuehrungszeitpunkt  DOCUMENT ME!
+     * @param  gewerk                         DOCUMENT ME!
+     * @param  verbleib                       DOCUMENT ME!
+     * @param  kompartiment                   DOCUMENT ME!
+     * @param  onlyCount                      DOCUMENT ME!
+     */
+    public MassnahmenartSearch(final String intervall,
+            final String einsatzvariante,
+            final String geraet,
+            final String ausfuehrungszeitpunkt,
+            final String zweiter_ausfuehrungszeitpunkt,
+            final String gewerk,
+            final String verbleib,
+            final String kompartiment,
+            final boolean onlyCount) {
         this.intervall = intervall;
         this.einsatzvariante = einsatzvariante;
         this.geraet = geraet;
@@ -80,6 +116,7 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
         this.gewerk = gewerk;
         this.verbleib = verbleib;
         this.kompartiment = kompartiment;
+        this.onlyCount = onlyCount;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -90,7 +127,14 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                String newQuery = QUERY;
+                String newQuery;
+
+                if (onlyCount) {
+                    newQuery = QUERY_COUNT;
+                } else {
+                    newQuery = QUERY;
+                }
+
                 int conditions = 0;
 
                 if ((intervall != null) && !intervall.equals("null")) {
@@ -157,10 +201,23 @@ public class MassnahmenartSearch extends AbstractCidsServerSearch {
                 }
 
                 if (conditions == 0) {
-                    newQuery += " WHERE kompartiment = " + kompartiment;
+                    newQuery += " WHERE ";
                 } else {
-                    newQuery += " AND kompartiment = " + kompartiment;
+                    newQuery += " AND ";
                 }
+
+                if (kompartiment.equals("1")) {
+                    newQuery += " sohle";
+                }
+
+                if (kompartiment.equals("2")) {
+                    newQuery += " ufer";
+                }
+
+                if (kompartiment.equals("3")) {
+                    newQuery += " umfeld";
+                }
+
                 ++conditions;
 
 //                final String query = String.format(
