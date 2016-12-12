@@ -26,9 +26,9 @@ public class EntwicklungszielRouteToStringConverter extends CustomToStringConver
         final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
 
         if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Entwicklungsziel: " + routenname + " [" + start + "-" + end + "]";
+            return "WRRL-Maßnahme: " + routenname + " [" + start + "-" + end + "]";
         } else {
-            return "Entwicklungsziel: unbekannt";
+            return "WRRL-Maßnahme: unbekannt";
         }
     }
 
