@@ -7,15 +7,10 @@
 ****************************************************/
 package de.cismet.cids.custom.wrrl_db_mv.server.trigger;
 
-import Sirius.server.localserver.attribute.ClassAttribute;
 import Sirius.server.newuser.User;
-import Sirius.server.search.Query;
-import Sirius.server.sql.DBConnection;
-import Sirius.server.sql.SystemStatement;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import java.sql.SQLException;
 import java.sql.Statement;
 
 import de.cismet.cids.dynamics.CidsBean;

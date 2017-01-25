@@ -26,28 +26,28 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class StaluSearch extends AbstractCidsServerSearch {
+public class FgskIdSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(StaluSearch.class);
+    private static final transient Logger LOG = Logger.getLogger(FgskIdSearch.class);
 
-    private static final String QUERY = "select stalu from ogc.stalu_10_f where st_intersects(the_geom, '%1$s');"; // NOI18N
+    private static final String QUERY = "select id from fgsk_kartierabschnitt"; // NOI18N
 
     //~ Instance fields --------------------------------------------------------
 
-    private String geometry;
+    private String condition;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  geometry  DOCUMENT ME!
+     * @param  condition  geometry DOCUMENT ME!
      */
-    public StaluSearch(final String geometry) {
-        this.geometry = geometry;
+    public FgskIdSearch(final String condition) {
+        this.condition = condition;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -58,7 +58,13 @@ public class StaluSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, geometry);
+                String query = QUERY;
+
+                if (condition != null) {
+                    query += " WHERE wkk ilike '" + condition + "' and (historisch is null or not historisch)";
+                } else {
+                    query += " WHERE (historisch is null or not historisch)";
+                }
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
                 }

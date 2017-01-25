@@ -26,28 +26,21 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class StaluSearch extends AbstractCidsServerSearch {
+public class WkFgWkkSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(StaluSearch.class);
+    private static final transient Logger LOG = Logger.getLogger(WkFgWkkSearch.class);
 
-    private static final String QUERY = "select stalu from ogc.stalu_10_f where st_intersects(the_geom, '%1$s');"; // NOI18N
-
-    //~ Instance fields --------------------------------------------------------
-
-    private String geometry;
+    private static final String QUERY = "select wk_k from wk_fg"; // NOI18N
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
-     *
-     * @param  geometry  DOCUMENT ME!
      */
-    public StaluSearch(final String geometry) {
-        this.geometry = geometry;
+    public WkFgWkkSearch() {
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -58,11 +51,10 @@ public class StaluSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, geometry);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("query: " + query); // NOI18N
+                    LOG.debug("query: " + QUERY); // NOI18N
                 }
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
+                final ArrayList<ArrayList> lists = ms.performCustomSearch(QUERY);
                 return lists;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);

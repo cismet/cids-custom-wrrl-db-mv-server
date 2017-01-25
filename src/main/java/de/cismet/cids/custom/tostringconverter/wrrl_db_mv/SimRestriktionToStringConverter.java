@@ -5,6 +5,10 @@
 *              ... and it just works.
 *
 ****************************************************/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package de.cismet.cids.custom.tostringconverter.wrrl_db_mv;
 
 import de.cismet.cids.tools.CustomToStringConverter;
@@ -15,20 +19,20 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class HydrologRouteToStringConverter extends CustomToStringConverter {
+public class SimRestriktionToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
     public String createString() {
-        final String routenname = String.valueOf(cidsBean.getProperty("linie.von.route.routenname"));
-        final String start = String.valueOf(cidsBean.getProperty("linie.von.wert"));
-        final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
+        final String routenname = String.valueOf(cidsBean.getProperty("ausdehnung.von.route.routenname"));
+        final String start = String.valueOf(cidsBean.getProperty("ausdehnung.von.wert"));
+        final String end = String.valueOf(cidsBean.getProperty("ausdehnung.bis.wert"));
 
         if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Hydrologie: " + routenname + " [" + start + "-" + end + "]";
+            return "Restriktionen: " + routenname + " [" + start + "-" + end + "]";
         } else {
-            return "Hydrologie: unbekannt";
+            return "Restriktionen: unbekannt";
         }
     }
 

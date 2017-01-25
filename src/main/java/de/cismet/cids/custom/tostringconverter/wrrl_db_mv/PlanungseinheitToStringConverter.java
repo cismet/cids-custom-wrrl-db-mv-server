@@ -15,13 +15,18 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GupUnterhaltungserfordernisToStringConverter extends CustomToStringConverter {
+public class PlanungseinheitToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
     public String createString() {
-        final Object name = cidsBean.getProperty("name_beschreibung");
-        return (name == null) ? "Neuer Situationstyp" : name.toString();
+        String name = (String)cidsBean.getProperty("name");
+
+        if (name == null) {
+            name = "unbekannt";
+        }
+
+        return name;
     }
 }

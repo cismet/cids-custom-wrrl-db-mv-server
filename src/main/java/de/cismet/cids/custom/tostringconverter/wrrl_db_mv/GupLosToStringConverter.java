@@ -15,20 +15,18 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class HydrologRouteToStringConverter extends CustomToStringConverter {
+public class GupLosToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
     public String createString() {
-        final String routenname = String.valueOf(cidsBean.getProperty("linie.von.route.routenname"));
-        final String start = String.valueOf(cidsBean.getProperty("linie.von.wert"));
-        final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
+        final String name = String.valueOf(cidsBean.getProperty("bezeichnung"));
 
-        if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Hydrologie: " + routenname + " [" + start + "-" + end + "]";
+        if (!isStringNull(name)) {
+            return name;
         } else {
-            return "Hydrologie: unbekannt";
+            return "unbenannt";
         }
     }
 

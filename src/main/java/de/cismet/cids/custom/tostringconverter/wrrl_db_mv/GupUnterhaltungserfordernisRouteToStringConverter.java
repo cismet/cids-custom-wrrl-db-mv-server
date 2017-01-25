@@ -26,9 +26,9 @@ public class GupUnterhaltungserfordernisRouteToStringConverter extends CustomToS
         final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
 
         if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return routenname + " [" + start + "-" + end + "]";
+            return "Situationstyp: " + routenname + " [" + start + "-" + end + "]";
         } else {
-            return "unbekannt";
+            return "Situationstyp: unbekannt";
         }
     }
 

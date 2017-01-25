@@ -26,14 +26,15 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class StaluSearch extends AbstractCidsServerSearch {
+public class TeilgebieteSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(StaluSearch.class);
+    private static final transient Logger LOG = Logger.getLogger(TeilgebieteSearch.class);
 
-    private static final String QUERY = "select stalu from ogc.stalu_10_f where st_intersects(the_geom, '%1$s');"; // NOI18N
+    private static final String QUERY =
+        "select tg_n from ogc.teilgebiete where st_intersects(the_geom, '%1$s') order by st_length(st_intersection(the_geom, '%1$s')) desc;"; // NOI18N
 
     //~ Instance fields --------------------------------------------------------
 
@@ -46,7 +47,7 @@ public class StaluSearch extends AbstractCidsServerSearch {
      *
      * @param  geometry  DOCUMENT ME!
      */
-    public StaluSearch(final String geometry) {
+    public TeilgebieteSearch(final String geometry) {
         this.geometry = geometry;
     }
 

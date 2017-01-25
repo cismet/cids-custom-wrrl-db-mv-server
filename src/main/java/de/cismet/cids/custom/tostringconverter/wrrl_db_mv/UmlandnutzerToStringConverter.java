@@ -33,7 +33,7 @@ public class UmlandnutzerToStringConverter extends CustomToStringConverter {
                 return vorname + " " + nachname;
             }
         } else {
-            return "unbenannt";
+            return "Person: unbenannt";
         }
     }
 }

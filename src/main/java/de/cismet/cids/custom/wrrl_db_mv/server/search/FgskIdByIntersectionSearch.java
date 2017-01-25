@@ -26,28 +26,41 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class StaluSearch extends AbstractCidsServerSearch {
+public class FgskIdByIntersectionSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(StaluSearch.class);
+    private static final transient Logger LOG = Logger.getLogger(FgskIdByIntersectionSearch.class);
 
-    private static final String QUERY = "select stalu from ogc.stalu_10_f where st_intersects(the_geom, '%1$s');"; // NOI18N
+    private static final String QUERY = "select k.id from fgsk_kartierabschnitt k "
+                + "join station_linie sl on (linie = sl.id) "
+                + "join station von on (von.id = sl.von) "
+                + "join station bis on (bis.id = sl.bis) "
+                + "join route on (route.id = von.route) "
+                + "where (historisch is null or not historisch) and von.route = %1s and "
+                + "((least(greatest(%2$s, %3$s), greatest(von.wert, bis.wert)) - greatest(least(%2$s, %3$s), least(von.wert, bis.wert))) > 0.01) "
+                + "order by least(von.wert, bis.wert)"; // NOI18N
 
     //~ Instance fields --------------------------------------------------------
 
-    private String geometry;
+    private final int routeId;
+    private final double from;
+    private final double till;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
-     * Creates a new WkkSearch object.
+     * Creates a new FgskIdByIntersectionSearch object.
      *
-     * @param  geometry  DOCUMENT ME!
+     * @param  routeId  DOCUMENT ME!
+     * @param  from     DOCUMENT ME!
+     * @param  till     DOCUMENT ME!
      */
-    public StaluSearch(final String geometry) {
-        this.geometry = geometry;
+    public FgskIdByIntersectionSearch(final int routeId, final double from, final double till) {
+        this.routeId = routeId;
+        this.from = from;
+        this.till = till;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -58,7 +71,8 @@ public class StaluSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, geometry);
+                final String query = String.format(QUERY, routeId, from, till);
+
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
                 }

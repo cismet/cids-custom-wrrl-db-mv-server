@@ -5,26 +5,11 @@
 *              ... and it just works.
 *
 ****************************************************/
-/*
- *  Copyright (C) 2010 therter
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
-import Sirius.server.search.CidsServerSearch;
+
+import org.apache.log4j.Logger;
 
 import java.rmi.RemoteException;
 
@@ -34,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
+import de.cismet.cids.server.search.AbstractCidsServerSearch;
+
 /**
  * Searchs for the wk_k the given geometry is contained in. The pgsql function getWk_k(integer, geometry) must exist in
  * the database.
@@ -41,13 +28,16 @@ import java.util.Locale;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class WkSearchByStations extends CidsServerSearch {
+public class WkSearchByStations extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
+    /** LOGGER. */
+    private static final transient Logger LOG = Logger.getLogger(WkSearchByStations.class);
+
     private static final String QUERY = "SELECT   wk_fg.wk_k   , "
-                + "         MIN(von.wert), "
-                + "         MAX(bis.wert) "
+                + "         least(von.wert,bis.wert), "
+                + "         greatest(von.wert,bis.wert) "
                 + "FROM     wk_fg        , "
                 + "         wk_fg_teile  , "
                 + "         wk_teil      , "
@@ -62,24 +52,39 @@ public class WkSearchByStations extends CidsServerSearch {
                 + "AND      station_linie.bis=bis.id "
                 + "AND      von.route        =route.id "
                 + "AND      route.gwk        ={0} "
-                + "GROUP BY wk_fg.wk_k "
-                + "HAVING   ( "
+                + "AND   ( "
                 + "                  ( "
-                + "                           {1}  <MAX(bis.wert) "
-                + "                  AND      {2}  >MAX(bis.wert) "
+                + "                      least(von.wert,bis.wert) <= {1}    "
+                + "                  and greatest(von.wert,bis.wert) >= {1} "
                 + "                  ) "
                 + "         OR "
                 + "                  ( "
-                + "                           {1}  <MIN(von.wert) "
-                + "                  AND      {2}  >MIN(von.wert) "
+                + "                      greatest(von.wert,bis.wert) >= {2} "
+                + "                  and least(von.wert,bis.wert) <= {2} "
                 + "                  ) "
-                + "         OR "
+                + "        OR "
                 + "                  ( "
-                + "                           {1}  <=MIN(von.wert) "
-                + "                  AND      {2}  >=MAX(bis.wert) "
+                + "                      least(von.wert,bis.wert) >= {1} "
+                + "                  and greatest(von.wert,bis.wert) <= {2} "
                 + "                  ) "
                 + "         ) "
-                + "ORDER BY MIN(von.wert)";
+//                + "HAVING   ( "
+//                + "                  ( "
+//                + "                           {1}  <MAX(bis.wert) "
+//                + "                  AND      {2}  >MAX(bis.wert) "
+//                + "                  ) "
+//                + "         OR "
+//                + "                  ( "
+//                + "                           {1}  <MIN(von.wert) "
+//                + "                  AND      {2}  >MIN(von.wert) "
+//                + "                  ) "
+//                + "         OR "
+//                + "                  ( "
+//                + "                           {1}  <=MIN(von.wert) "
+//                + "                  AND      {2}  >=MAX(bis.wert) "
+//                + "                  ) "
+//                + "         ) "
+                + "ORDER BY least(von.wert,bis.wert)";
 //    private static final String QUERY = "SELECT   wk_fg.wk_k   , "
 //                + "         MIN(von.wert), "
 //                + "         MAX(bis.wert) "
@@ -142,7 +147,7 @@ public class WkSearchByStations extends CidsServerSearch {
 
     @Override
     public Collection performServerSearch() {
-        final MetaService ms = (MetaService)getActiveLoaclServers().get(WRRL_DOMAIN);
+        final MetaService ms = (MetaService)getActiveLocalServers().get(WRRL_DOMAIN);
 
         if (ms != null) {
             try {
@@ -151,16 +156,16 @@ public class WkSearchByStations extends CidsServerSearch {
                         route_gwk,
                         String.format(Locale.US, "%f", from),
                         String.format(Locale.US, "%f", to));
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("query: " + query); // NOI18N
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("query: " + query); // NOI18N
                 }
                 final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
                 return lists;
             } catch (RemoteException ex) {
-                getLog().error(ex.getMessage(), ex);
+                LOG.error(ex.getMessage(), ex);
             }
         } else {
-            getLog().error("active local server not found"); // NOI18N
+            LOG.error("active local server not found"); // NOI18N
         }
 
         return null;
@@ -174,8 +179,8 @@ public class WkSearchByStations extends CidsServerSearch {
     public static void main(final String[] args) {
         System.out.println(MessageFormat.format(
                 QUERY,
-                "4711",
-                String.format(Locale.US, "%f", 0.67),
-                String.format(Locale.US, "%f", 859457f)));
+                "964540000000",
+                String.format(Locale.US, "%f", 0.0),
+                String.format(Locale.US, "%f", 9343.0)));
     }
 }

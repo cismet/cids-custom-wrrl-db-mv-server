@@ -15,13 +15,12 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class GupUnterhaltungserfordernisToStringConverter extends CustomToStringConverter {
+public class WfdPressureTypeCodeToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
     public String createString() {
-        final Object name = cidsBean.getProperty("name_beschreibung");
-        return (name == null) ? "Neuer Situationstyp" : name.toString();
+        return cidsBean.getProperty("value") + " - " + cidsBean.getProperty("name");
     }
 }

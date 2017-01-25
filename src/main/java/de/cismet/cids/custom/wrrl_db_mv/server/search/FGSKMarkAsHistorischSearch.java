@@ -15,6 +15,7 @@ import java.rmi.RemoteException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import de.cismet.cids.custom.wrrl_db_mv.commons.WRRLUtil;
 
@@ -26,28 +27,29 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class StaluSearch extends AbstractCidsServerSearch {
+public class FGSKMarkAsHistorischSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(StaluSearch.class);
+    private static final transient Logger LOG = Logger.getLogger(FGSKMarkAsHistorischSearch.class);
 
-    private static final String QUERY = "select stalu from ogc.stalu_10_f where st_intersects(the_geom, '%1$s');"; // NOI18N
+    private static final String QUERY = "update fgsk_kartierabschnitt set historisch = true "
+                + "where id = any(Array[%1$s]);";
 
     //~ Instance fields --------------------------------------------------------
 
-    private String geometry;
+    private final Integer[] fgskIds;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
-     * Creates a new WkkSearch object.
+     * Creates a new FGSKMarkAsHistorischSearch object.
      *
-     * @param  geometry  DOCUMENT ME!
+     * @param  fgskIds  DOCUMENT ME!
      */
-    public StaluSearch(final String geometry) {
-        this.geometry = geometry;
+    public FGSKMarkAsHistorischSearch(final Integer[] fgskIds) {
+        this.fgskIds = fgskIds;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -58,12 +60,17 @@ public class StaluSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, geometry);
+                final String query = String.format(QUERY, asStringList(fgskIds));
+
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
                 }
-                final ArrayList<ArrayList> lists = ms.performCustomSearch(query);
-                return lists;
+                final int consideredRows = ms.update(getUser(), query);
+
+                final List<Integer> result = new ArrayList<Integer>();
+                result.add(consideredRows);
+
+                return result;
             } catch (RemoteException ex) {
                 LOG.error(ex.getMessage(), ex);
             }
@@ -72,5 +79,26 @@ public class StaluSearch extends AbstractCidsServerSearch {
         }
 
         return null;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param   ids  DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    private String asStringList(final Integer[] ids) {
+        StringBuilder stringList = null;
+
+        for (final int i : ids) {
+            if (stringList == null) {
+                stringList = new StringBuilder(i);
+            } else {
+                stringList.append(",").append(i);
+            }
+        }
+
+        return ((stringList != null) ? stringList.toString() : "");
     }
 }

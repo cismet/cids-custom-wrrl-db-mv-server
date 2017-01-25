@@ -15,7 +15,7 @@ import de.cismet.cids.tools.CustomToStringConverter;
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class HydrologRouteToStringConverter extends CustomToStringConverter {
+public class VerbreitungsraumToStringConverter extends CustomToStringConverter {
 
     //~ Methods ----------------------------------------------------------------
 
@@ -26,9 +26,9 @@ public class HydrologRouteToStringConverter extends CustomToStringConverter {
         final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
 
         if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Hydrologie: " + routenname + " [" + start + "-" + end + "]";
+            return "Verbreitungsraum: " + routenname + " [" + start + "-" + end + "]";
         } else {
-            return "Hydrologie: unbekannt";
+            return "Verbreitungsraum: unbekannt";
         }
     }
 

@@ -48,7 +48,7 @@ public abstract class ComplexRatingSearch extends AbstractCalcCacheSearch {
 
     @Override
     protected Map internalPerformSearch(final MetaService ms) throws SearchException {
-        final Map<Integer, Map<Range, Integer>> result = new HashMap<Integer, Map<Range, Integer>>();
+        final Map<Integer, Map<Range, Number>> result = new HashMap<Integer, Map<Range, Number>>();
 
         final Map<String, Range> rangeCache = new HashMap<String, Range>();
 
@@ -66,13 +66,20 @@ public abstract class ComplexRatingSearch extends AbstractCalcCacheSearch {
                 final int key = ((BigDecimal)row.get(0)).intValueExact();
                 final double rFrom = ((BigDecimal)row.get(1)).doubleValue();
                 final double rTo = ((BigDecimal)row.get(2)).doubleValue();
-                final int rating = (Integer)row.get(3);
+                final Number rating;
+                if (row.get(3) instanceof Integer) {
+                    rating = (Integer)row.get(3);
+                } else if (row.get(3) instanceof BigDecimal) {
+                    rating = ((BigDecimal)row.get(3)).doubleValue();
+                } else {
+                    throw new IllegalStateException("unsupported column type: " + row.get(3).getClass());
+                }
 
-                Map<Range, Integer> rMap;
+                Map<Range, Number> rMap;
                 if (result.containsKey(key)) {
                     rMap = result.get(key);
                 } else {
-                    rMap = new HashMap<Range, Integer>();
+                    rMap = new HashMap<Range, Number>();
                     result.put(key, rMap);
                 }
 

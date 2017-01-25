@@ -21,33 +21,33 @@ import de.cismet.cids.custom.wrrl_db_mv.commons.WRRLUtil;
 import de.cismet.cids.server.search.AbstractCidsServerSearch;
 
 /**
- * DOCUMENT ME!
+ * Search for the gup_unterhaltungsmassnamen, which are contained in the given gup_los.
  *
  * @author   therter
  * @version  $Revision$, $Date$
  */
-public class StaluSearch extends AbstractCidsServerSearch {
+public class PlanungsabschnittSearch extends AbstractCidsServerSearch {
 
     //~ Static fields/initializers ---------------------------------------------
 
     /** LOGGER. */
-    private static final transient Logger LOG = Logger.getLogger(StaluSearch.class);
+    private static final transient Logger LOG = Logger.getLogger(PlanungsabschnittSearch.class);
 
-    private static final String QUERY = "select stalu from ogc.stalu_10_f where st_intersects(the_geom, '%1$s');"; // NOI18N
+    private static final String QUERY = "select id, name from gup_planungsabschnitt where gup = %1$s";
 
     //~ Instance fields --------------------------------------------------------
 
-    private String geometry;
+    private String gupId;
 
     //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new WkkSearch object.
      *
-     * @param  geometry  DOCUMENT ME!
+     * @param  gupId  losId geometry DOCUMENT ME!
      */
-    public StaluSearch(final String geometry) {
-        this.geometry = geometry;
+    public PlanungsabschnittSearch(final String gupId) {
+        this.gupId = gupId;
     }
 
     //~ Methods ----------------------------------------------------------------
@@ -58,7 +58,7 @@ public class StaluSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, geometry);
+                final String query = String.format(QUERY, gupId);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
                 }
