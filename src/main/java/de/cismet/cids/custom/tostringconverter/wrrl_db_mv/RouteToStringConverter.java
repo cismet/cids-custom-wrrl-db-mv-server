@@ -21,6 +21,6 @@ public final class RouteToStringConverter extends CustomToStringConverter {
 
     @Override
     public String createString() {
-        return "Route: " + cidsBean.getProperty("gwk");
+        return "Route: " + cidsBean.getProperty("gwk") + "-" + String.valueOf(cidsBean.getProperty("routenname"));
     }
 }
