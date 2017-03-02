@@ -24,6 +24,9 @@
     </scm>
 
     <properties>
+        <!-- 
+            TODO: Remove when deprecated cids-parent is replaced by cismet-parent
+        -->
         <de.cismet.libDir>lib/localWRRLDBMV</de.cismet.libDir>
     </properties>
 
