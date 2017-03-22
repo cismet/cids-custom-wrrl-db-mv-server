@@ -182,7 +182,7 @@
             CAUTION ! Ugly Winning bei der Namens-Auswahl !!! siehe Slack =>
             https://cismet.slack.com/files/jruiz/F3ZC7HX7V/Snapshot_als_finalName_in_pom_xml
         -->
-        <finalName>cidsCustomServerStuff.jar</finalName>
+        <finalName>cidsCustomServerStuff</finalName>
     </build>
 </project>
 
