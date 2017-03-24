@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- 
-        FIXME: Replace deprecated cids-parent by cismet-parent
+        FIXME: Replace deprecated cids-parent by cismet-parent!
     -->
     <parent>
         <groupId>de.cismet.cids</groupId>
