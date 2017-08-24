@@ -30,9 +30,9 @@ public class GupHydrologRouteToStringConverter extends CustomToStringConverter {
         final String end = String.valueOf(cidsBean.getProperty("linie.bis.wert"));
 
         if (!isStringNull(routenname) && !isStringNull(start) && !isStringNull(end)) {
-            return "Hydrologie: " + routenname + " [" + start + "-" + end + "]";
+            return "Hydraulik: " + routenname + " [" + start + "-" + end + "]";
         } else {
-            return "Hydrologie: unbekannt";
+            return "Hydraulik: unbekannt";
         }
     }
 
