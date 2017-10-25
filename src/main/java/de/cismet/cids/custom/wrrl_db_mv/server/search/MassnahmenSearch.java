@@ -36,7 +36,8 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
     private static final String QUERY =
         "select pvon.wert, pbis.wert, g.name, p.name, a.name, b.ort, von.wert, bis.wert, "
                 + "m.randstreifenbreite, m.boeschungsbreite, m.boeschungslaenge, "
-                + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite, m.cbmprom, m.stueck, m.stunden, m.schnitttiefe, a.id, a.leistungstext, "
+                + "m.deichkronenbreite, m.sohlbreite, m.vorlandbreite, m.cbmprom, m.stueck, m.stunden, m.schnitttiefe, m.teillaenge, "
+                + "m.m_zwei, m.m_drei, m.arbeitsbreite, a.id, a.leistungstext, "
                 + " CASE WHEN a.aufmass_regel is null or a.aufmass_regel = '' THEN gewerk.aufmass_regel "
                 + "ELSE a.aufmass_regel END, CASE WHEN a.einheit is null or a.einheit = '' THEN gewerk.einheit "
                 + "ELSE a.einheit END, m.id, p.id, g.id, r.gwk, a.massnahmen_id from gup_unterhaltungsmassnahme m "
