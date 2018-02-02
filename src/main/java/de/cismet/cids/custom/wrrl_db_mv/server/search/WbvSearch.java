@@ -34,7 +34,7 @@ public class WbvSearch extends AbstractCidsServerSearch {
     private static final transient Logger LOG = Logger.getLogger(WbvSearch.class);
 
     private static final String QUERY =
-        "select wbv.name from ogc.wbv wbv, (select line_substring(geo_field, %1$s / length(geo_field), %2$s / length(geo_field)) as geo from route, geom where route.gwk = %3$s AND route.geom = geom.id) as geo where the_geom && geo.geo AND intersects(the_geom, geo.geo);"; // NOI18N
+        "select wbv.name from ogc.wbv wbv, (select line_substring(geo_field, %1$s / st_length(geo_field), %2$s / st_length(geo_field)) as geo from route, geom where route.gwk = %3$s AND route.geom = geom.id) as geo where the_geom && geo.geo AND st_intersects(the_geom, geo.geo);"; // NOI18N
 
     //~ Instance fields --------------------------------------------------------
 

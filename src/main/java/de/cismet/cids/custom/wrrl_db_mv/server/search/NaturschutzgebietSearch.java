@@ -45,10 +45,10 @@ public class NaturschutzgebietSearch extends AbstractCidsServerSearch {
 
     private static final String QUERY = "select na.name,"
                 + "   ST_Line_Locate_Point(route_geo, st_startPoint( ST_GeometryN(ST_intersection(geo_field, sgeom.geo), "
-                + "      generate_series(1, ST_NumGeometries(ST_intersection(geo_field, sgeom.geo)))) )) * length(route_geo)"
+                + "      generate_series(1, ST_NumGeometries(ST_intersection(geo_field, sgeom.geo)))) )) * st_length(route_geo)"
                 + " as startPoint, "
                 + "   ST_Line_Locate_Point(route_geo, st_endPoint( ST_GeometryN(ST_intersection(geo_field, sgeom.geo), "
-                + "      generate_series(1, ST_NumGeometries(ST_intersection(geo_field, sgeom.geo)))) )) * length(route_geo)"
+                + "      generate_series(1, ST_NumGeometries(ST_intersection(geo_field, sgeom.geo)))) )) * st_length(route_geo)"
                 + " as endPoint "
                 + "from gup_naturschutzgebiet n inner join geom on (n.geom = geom.id) "
                 + "inner join gup_naturschutzart na on (n.art = na.id) inner join "
