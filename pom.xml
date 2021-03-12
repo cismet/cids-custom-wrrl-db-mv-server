@@ -8,7 +8,7 @@
     <parent>
         <groupId>de.cismet.cids</groupId>
         <artifactId>cids-parent</artifactId>
-        <version>6.0</version>
+        <version>7.0</version>
     </parent>
 
     <groupId>de.cismet.cids.custom.wrrl_db_mv</groupId>
@@ -49,28 +49,16 @@
             <dependency>
                 <groupId>de.cismet</groupId>
                 <artifactId>cismet-ext-bom</artifactId>
-                <version>6.0</version>
+                <version>7.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         
             <!-- BEGIN: managed cids-dependencies -->
             <dependency>
-                <groupId>net.postgis</groupId>
-                <artifactId>postgis-jdbc</artifactId>
-                <version>2.2.1</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>42.2.1</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
                 <groupId>de.cismet.commons</groupId>
                 <artifactId>cismet-commons</artifactId>
-                <version>6.5.5</version>
+                <version>7.0</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>
@@ -78,7 +66,7 @@
             <dependency>
                 <groupId>de.cismet.cids</groupId>
                 <artifactId>cids-server</artifactId>
-                <version>6.3.9</version>
+                <version>7.0</version>
                 <type>jar</type>
                 <scope>compile</scope>
                 <exclusions>
@@ -96,7 +84,7 @@
             <dependency>
                 <groupId>de.cismet.cids</groupId>
                 <artifactId>cids-server-rest-types</artifactId>
-                <version>6.0</version>
+                <version>7.0</version>
                 <scope>compile</scope>
                 <type>jar</type>
             </dependency>
@@ -104,7 +92,7 @@
             <dependency>
                 <groupId>de.cismet.cids.custom.wrrl_db_mv</groupId>
                 <artifactId>cids-custom-wrrl-db-mv-commons</artifactId>
-                <version>6.0</version>
+                <version>7.0</version>
                 <!--
                      cids-custom-wrrl-db-mv-server imports only final CONSTANTS from cids-custom-wrrl-db-mv-commons:
                     -> static final fields will be inlined by the bytecode compiler 
@@ -114,6 +102,18 @@
                 -->
                 <scope>provided</scope>
                 <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>net.postgis</groupId>
+                <artifactId>postgis-jdbc</artifactId>
+                <version>2.2.1</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.2.1</version>
+                <scope>runtime</scope>
             </dependency>
             <!-- END: managed cids-dependencies -->    
         </dependencies>
