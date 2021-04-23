@@ -38,8 +38,8 @@ public class LawaTypeNeighbourSearch extends AbstractCidsServerSearch {
 
     //~ Instance fields --------------------------------------------------------
 
-    private String lawaTypeId;
-    private String isPredecessor;
+    private final String lawaTypeId;
+    private final String isPredecessor;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -63,7 +63,7 @@ public class LawaTypeNeighbourSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, lawaTypeId, isPredecessor);
+                final String query = String.format(QUERY, Long.parseLong(lawaTypeId), isPredecessor);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
                 }

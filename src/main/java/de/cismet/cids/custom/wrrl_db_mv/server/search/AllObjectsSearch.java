@@ -8,6 +8,7 @@
 package de.cismet.cids.custom.wrrl_db_mv.server.search;
 
 import Sirius.server.middleware.interfaces.domainserver.MetaService;
+import Sirius.server.middleware.types.MetaClass;
 import Sirius.server.middleware.types.MetaObject;
 
 import org.apache.log4j.Logger;
@@ -63,9 +64,15 @@ public class AllObjectsSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, classId, tablename);
+                final MetaClass MC_SIM_FLAECEHNERWERBSPREIS = ms.getClassByTableName(
+                        getUser(),
+                        "sim_flaechenerwerbspreis");
+                final String query = String.format(
+                        QUERY,
+                        MC_SIM_FLAECEHNERWERBSPREIS.getID(),
+                        MC_SIM_FLAECEHNERWERBSPREIS.getTableName());
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("query: " + query); // NOI18N
+                    LOG.debug("query: " + QUERY); // NOI18N
                 }
                 final MetaObject[] lists = ms.getMetaObject(getUser(), query);
                 return Arrays.asList(lists);

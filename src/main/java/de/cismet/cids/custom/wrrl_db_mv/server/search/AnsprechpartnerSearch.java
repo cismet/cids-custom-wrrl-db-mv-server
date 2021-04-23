@@ -11,6 +11,8 @@ import Sirius.server.middleware.interfaces.domainserver.MetaService;
 
 import org.apache.log4j.Logger;
 
+import java.math.BigInteger;
+
 import java.rmi.RemoteException;
 
 import java.text.MessageFormat;
@@ -77,6 +79,9 @@ public class AnsprechpartnerSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
+                // if route_gwk cannot converted to BigInteger, then ssomething is wrong with the gwk
+                // and the search should not be executed
+                final BigInteger bi = new BigInteger(route_gwk);
                 final String query = MessageFormat.format(
                         QUERY,
                         route_gwk,
