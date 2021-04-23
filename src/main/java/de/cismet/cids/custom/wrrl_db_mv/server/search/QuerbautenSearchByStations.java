@@ -57,7 +57,7 @@ public class QuerbautenSearchByStations extends AbstractCidsServerSearch {
                 + "querbauwerke.bauwerk, "
                 + "querbauwerke.anlagename, "
                 + "station.wert, "
-                + "asText(geo_field) "
+                + "st_asText(geo_field) "
                 + "FROM querbauwerke, "
                 + "station, "
                 + "route,"
