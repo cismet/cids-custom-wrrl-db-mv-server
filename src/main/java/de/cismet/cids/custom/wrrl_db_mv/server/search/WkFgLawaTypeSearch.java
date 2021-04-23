@@ -23,8 +23,9 @@ import de.cismet.cids.server.search.AbstractCidsServerSearch;
 /**
  * Searchs for the LAWA types which are contained within a WK-FG.
  *
- * @author   therter
- * @version  $Revision$, $Date$
+ * @author      therter
+ * @version     $Revision$, $Date$
+ * @deprecated  Should not be used, anymore
  */
 public class WkFgLawaTypeSearch extends AbstractCidsServerSearch {
 

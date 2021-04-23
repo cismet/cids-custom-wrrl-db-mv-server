@@ -100,7 +100,7 @@ public class MassnahmenSearch extends AbstractCidsServerSearch {
 
         if (ms != null) {
             try {
-                final String query = String.format(QUERY, losId);
+                final String query = String.format(QUERY, Long.parseLong(losId));
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
                 }
