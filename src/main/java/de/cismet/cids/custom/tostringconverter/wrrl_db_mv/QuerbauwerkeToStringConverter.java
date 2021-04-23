@@ -28,15 +28,28 @@ public class QuerbauwerkeToStringConverter extends CustomToStringConverter {
     @Override
     public String createString() {
         final CidsBean stat09 = (CidsBean)cidsBean.getProperty("stat09");
+        final CidsBean hb = (CidsBean)cidsBean.getProperty("hb");
+        final CidsBean bauwerk = (CidsBean)cidsBean.getProperty("bauwerk");
+        final String bauwerkString = (bauwerk == null ? "nicht gesetzt" : bauwerk.toString());
 
         if (stat09 != null) {
             final Double statVal = (Double)stat09.getProperty(LinearReferencingConstants.PROP_STATION_VALUE);
             final String wert = new DecimalFormat("#.#").format(statVal);
             final CidsBean route = (CidsBean)stat09.getProperty(LinearReferencingConstants.PROP_STATION_ROUTE);
-            final String gwk = String.valueOf(route.getProperty(LinearReferencingConstants.PROP_ROUTE_GWK));
-            return "Querbauwerk " + gwk + "@" + wert;
+            String gwk = String.valueOf(route.getProperty(LinearReferencingConstants.PROP_ROUTE_GWK));
+            gwk = rtrim(gwk, "0");
+            
+            return "Querbauwerk " + gwk + " " + bauwerkString + "@" + wert + (hb != null ? hb : "");
         } else {
-            return "Querbauwerk " + 0 + "@" + 0;
+            return "Querbauwerk " + 0 + " " + bauwerkString + "@" + 0 + (hb != null ? hb : "");
         }
+    }
+    
+    private String rtrim(String s, String replacement) {
+        while (s.length() > 0 && s.endsWith(replacement)) {
+            s = s.substring(0, s.length() - 1);
+        }
+        
+        return s;
     }
 }
