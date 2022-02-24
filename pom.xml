@@ -49,7 +49,7 @@
             <dependency>
                 <groupId>de.cismet</groupId>
                 <artifactId>cismet-ext-bom</artifactId>
-                <version>7.0</version>
+                <version>7.2.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -58,7 +58,7 @@
             <dependency>
                 <groupId>de.cismet.commons</groupId>
                 <artifactId>cismet-commons</artifactId>
-                <version>7.2.4</version>
+                <version>7.2.8</version>
                 <type>jar</type>
                 <scope>compile</scope>
             </dependency>
@@ -66,7 +66,7 @@
             <dependency>
                 <groupId>de.cismet.cids</groupId>
                 <artifactId>cids-server</artifactId>
-                <version>7.7.5</version>
+                <version>7.8.3</version>
                 <type>jar</type>
                 <scope>compile</scope>
                 <exclusions>
@@ -112,7 +112,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.1</version>
+                <version>42.2.25</version>
                 <scope>runtime</scope>
             </dependency>
             <!-- END: managed cids-dependencies -->    
