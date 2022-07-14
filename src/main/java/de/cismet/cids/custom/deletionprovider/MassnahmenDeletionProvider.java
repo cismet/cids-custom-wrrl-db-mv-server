@@ -17,10 +17,12 @@ import org.apache.log4j.Logger;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import de.cismet.cids.custom.wrrl_db_mv.commons.WRRLUtil;
+
 /**
  * DOCUMENT ME!
  *
- * @author   sandra
+ * @author   therter
  * @version  $Revision$, $Date$
  */
 @ServiceProvider(service = CustomDeletionProvider.class)
@@ -45,11 +47,11 @@ public class MassnahmenDeletionProvider extends AbstractCustomDeletionProvider {
                 "Die Maßnahme darf nicht gelöscht werden.\nStattdessen sollte die Option \"Maßnahme verworfen\" markiert werden.");
         }
 
-        return true;
+        return false;
     }
 
     @Override
     public String getDomain() {
-        return "WUNDA_BLAU";
+        return WRRLUtil.DOMAIN_NAME;
     }
 }
