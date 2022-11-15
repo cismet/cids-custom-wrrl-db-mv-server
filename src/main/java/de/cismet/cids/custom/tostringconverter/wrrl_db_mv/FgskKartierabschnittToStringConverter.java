@@ -37,13 +37,28 @@ public class FgskKartierabschnittToStringConverter extends CustomToStringConvert
         final Double von = (Double)statVonBean.getProperty(LinearReferencingConstants.PROP_STATION_VALUE);
         final Double bis = (Double)statBisBean.getProperty(LinearReferencingConstants.PROP_STATION_VALUE);
         final Boolean hist = (Boolean)cidsBean.getProperty("historisch");
-        final String histString = (((hist != null) && hist) ? " historisch" : "");
+        final String histString = (((hist != null) && hist) ? " hist" : "");
 
         final String gwkString = (gwk == null) ? "unbekannt" : String.valueOf(gwk);
         final String abschnittString = (abschnitt == null) ? "" : abschnitt;
         final String vonString = (von == null) ? "unbekannt" : String.format("%06d", von.intValue());
         final String bisString = (bis == null) ? "unbekannt" : String.format("%06d", bis.intValue());
+        final Boolean isAr = coalesce((Boolean)statVonBean.getProperty("ohne_route"), false)
+                    || coalesce((Boolean)statBisBean.getProperty("ohne_route"), false);
+        final String arString = (isAr ? (hist ? " + AR" : " AR") : "");
 
-        return gwkString + " " + abschnittString + " [" + vonString + " - " + bisString + "]" + histString;
+        return gwkString + " " + abschnittString + " [" + vonString + " - " + bisString + "]" + histString + arString;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param   b    DOCUMENT ME!
+     * @param   def  DOCUMENT ME!
+     *
+     * @return  DOCUMENT ME!
+     */
+    private Boolean coalesce(final Boolean b, final boolean def) {
+        return ((b == null) ? def : b);
     }
 }
