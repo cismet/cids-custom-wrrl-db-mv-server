@@ -63,7 +63,8 @@ public class FgskIdSearch extends AbstractCidsServerSearch {
                 if (condition != null) {
                     query += " WHERE wkk ilike '" + condition + "' and (historisch is null or not historisch)";
                 } else {
-                    query += " WHERE (historisch is null or not historisch)";
+//                    query += " WHERE coalesce(bewertung_substratdiversitaet, -1) <> coalesce(calc_subs_div(id), -1)";
+                    query += " WHERE not (historisch is null or not historisch)";
                 }
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("query: " + query); // NOI18N
