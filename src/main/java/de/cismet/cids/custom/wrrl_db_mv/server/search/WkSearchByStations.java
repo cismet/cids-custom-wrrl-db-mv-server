@@ -52,6 +52,7 @@ public class WkSearchByStations extends AbstractCidsServerSearch {
                 + "AND      station_linie.bis=bis.id "
                 + "AND      von.route        =route.id "
                 + "AND      route.gwk        ={0} "
+                + "AND      not (wk_fg.wk_k ilike 'gelöscht%') "
                 + "AND   ( "
                 + "                  ( "
                 + "                      least(von.wert,bis.wert) <= {1}    "
