@@ -22,7 +22,7 @@ public class BioMstFibsToStringConverter extends CustomToStringConverter {
     @Override
     public String createString() {
         String mst = (String)cidsBean.getProperty("bio_mst.messstelle");
-        final Number gwk = (Number)cidsBean.getProperty("linie.route.von.gwk");
+        final Number gwk = (Number)cidsBean.getProperty("linie.von.route.gwk");
         final Double von = (Double)cidsBean.getProperty("linie.von.wert");
         final Double bis = (Double)cidsBean.getProperty("linie.bis.wert");
 
