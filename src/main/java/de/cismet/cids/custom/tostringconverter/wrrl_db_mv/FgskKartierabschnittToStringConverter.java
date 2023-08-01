@@ -45,7 +45,7 @@ public class FgskKartierabschnittToStringConverter extends CustomToStringConvert
         final String bisString = (bis == null) ? "unbekannt" : String.format("%06d", bis.intValue());
         final Boolean isAr = coalesce((Boolean)statVonBean.getProperty("ohne_route"), false)
                     || coalesce((Boolean)statBisBean.getProperty("ohne_route"), false);
-        final String arString = (isAr ? (hist ? " + AR" : " AR") : "");
+        final String arString = (isAr ? (((hist != null) && hist) ? " + AR" : " AR") : "");
 
         return gwkString + " " + abschnittString + " [" + vonString + " - " + bisString + "]" + histString + arString;
     }
