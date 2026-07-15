@@ -29,8 +29,9 @@ public class QuerbauwerkeToStringConverter extends CustomToStringConverter {
     public String createString() {
         final CidsBean stat09 = (CidsBean)cidsBean.getProperty("stat09");
         final CidsBean hb = (CidsBean)cidsBean.getProperty("hb");
-        final CidsBean bauwerk = (CidsBean)cidsBean.getProperty("bauwerk");
-        final String bauwerkString = ((bauwerk == null) ? "nicht gesetzt" : bauwerk.toString());
+        final CidsBean bauwerk = (CidsBean)cidsBean.getProperty("detailtyp");
+        final String bauwerkString = ((bauwerk == null) ? "nicht gesetzt"
+                                                        : String.valueOf(bauwerk.getProperty("value")));
 
         if (stat09 != null) {
             final Double statVal = (Double)stat09.getProperty(LinearReferencingConstants.PROP_STATION_VALUE);
